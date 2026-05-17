@@ -1,0 +1,74 @@
+---
+name: cross-provider-architect
+description: Pattern A composite skill — architecture critique using CC `architect` + Codex `codex-adversarial-reviewer` in parallel. CC validates the design; Codex pressure-tests it. Synthesis labels divergence. Auto-falls back to CC-only when Codex unavailable. Used by `/m-arch-review` and `/m-design-spec`.
+allowed-tools:
+  - Bash
+  - Read
+  - Write
+  - Agent
+user-invocable: true
+kind: workflow
+---
+
+# /m-cross-provider-architect — Pattern A Composite Skill
+
+Same skill-form Pattern A shape as `m-cross-provider-reviewer`, but pairs CC `architect` with Codex `codex-adversarial-reviewer`. The asymmetry is intentional: CC validates, Codex critiques — different roles within Pattern A.
+
+## Inputs (JSON envelope as `args`)
+
+```json
+{
+  "task": "<arch proposal, design spec, or tradeoff question>",
+  "task_dir": "<optional: absolute path for artifact write>",
+  "role": "architect",
+  "timeout_seconds": 900
+}
+```
+
+## Procedure
+
+### 1. Probe Codex (same as m-cross-provider-reviewer)
+
+```bash
+codex --version >/dev/null 2>&1 && echo "codex_healthy=1" || echo "codex_healthy=0"
+```
+
+### 2. Parallel dispatch (single assistant message, two Agent tool calls)
+
+If `codex_healthy=1`, in ONE message issue BOTH:
+
+- `Agent(subagent_type: "everything-claude-code:architect", description: "CC architect", prompt: <task envelope>, model: "sonnet")`
+- `Agent(subagent_type: "codex-adversarial-reviewer", description: "Codex adversarial critique", prompt: <task envelope>)`
+
+Wait for both to return before synthesizing.
+
+If `codex_healthy=0`, call only `everything-claude-code:architect` (with `model: "sonnet"`) and proceed to synthesis with `fallback_reason: "codex unavailable"`.
+
+The `model: "sonnet"` override on the CC architect dispatch supersedes the agent's `model: opus` frontmatter — m-* family routes architecture work through Sonnet, not Opus, by policy.
+
+### 3. Synthesis
+
+The two outputs are intentionally different in tone. Synthesis must:
+- List the validated design (CC architect) up top
+- Append adversarial findings (Codex) as "pressure-test results"
+- Cross-reference: when an adversarial finding contradicts a validated decision, flag explicitly
+- End with a unified verdict: approve | revise | block — choose the more conservative across both
+
+### 4. Write artifacts (same shape as m-cross-provider-reviewer)
+
+- `<task_dir>/raw_cc.md` — architect output
+- `<task_dir>/raw_codex.jsonl` — adversarial reviewer output
+- `<task_dir>/review.md` — synthesis
+- `<task_dir>/result.json` — schema v1
+
+### 5. Return synthesis to caller
+
+Skill body's final assistant text: the synthesized review.md content.
+
+## Failure semantics
+
+Same as `m-cross-provider-reviewer` — Codex probe/dispatch fail = CC-only fallback; both fail = `status: failed`; framework error = propagate.
+
+## Cost note
+
+Pattern A — ~2× tokens. Reserved for highest-leverage gates: `/m-arch-review` and `/m-design-spec` (architect-review stage).
