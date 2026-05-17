@@ -1,24 +1,8 @@
 {
   "name": "m-workflow",
-  "description": "Workflow-discipline skill family — R4 spike (verify CLAUDE_PLUGIN_ROOT + userConfig scope).",
-  "version": "0.0.2",
+  "description": "Workflow-discipline skill family: 11 stage skills + init.",
+  "version": "0.1.0",
   "author": { "name": "miles_chen", "email": "mileschen1217@gmail.com" },
   "license": "MIT",
-  "keywords": ["workflow", "spike"],
-  "userConfig": {
-    "specs_dir": {
-      "type": "directory",
-      "title": "Specs dir (spike test)",
-      "description": "Where design specs would live. Spike asks this to verify userConfig scope.",
-      "default": ".swarm/specs",
-      "required": false
-    },
-    "adopt_source_as_truth": {
-      "type": "boolean",
-      "title": "Adopt source-as-truth discipline?",
-      "description": "Spike test of boolean userConfig.",
-      "default": false,
-      "required": false
-    }
-  }
+  "keywords": ["workflow", "spec", "review", "epic", "discipline"]
 }
