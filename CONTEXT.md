@@ -6,6 +6,48 @@ The canonical vocabulary the m-workflow skill family operates in. SKILL.md bodie
 
 Constitution + bridge content for the source-as-truth discipline. "Constitution" sections are permanent; "enforceable-rule" sections carry `kill-on: lever-discipline-mechanisation` (a future linter/CI grep tool that would mechanise them).
 
+## Skill / Mode / Discipline / Baseline — structural roles
+
+Constitution.
+
+Four structural roles for cross-cutting behavior in the m-workflow plugin, distinguished by **activation scope**:
+
+| Role | Activation scope | How turned on | Example |
+|---|---|---|---|
+| **Skill** | per-invocation | `Skill` tool call | `grill-with-docs` |
+| **Mode** | per-session | user toggle (e.g. `/<mode-name>`) | `caveman`, `ground-as-source` |
+| **Discipline** | per-project | `.claude/m-workflow.yaml` `adopted_disciplines:` | `source-as-truth` |
+| **Baseline** | per-plugin | hard-coded into plugin | _(none currently)_ |
+
+The four are exhaustive and mutually exclusive — every cross-cutting rule fits exactly one role.
+
+### Classification flow
+
+Three sequential questions decide where a concept goes:
+
+1. **Is it cross-cutting?** (modifies ≥2 stage skills' steps)
+   - No → it's a **skill** (one entry point, one purpose).
+2. **What's the natural activation scope?**
+   - Single moment in a task → keep as skill (manual invoke each time).
+   - Ambient within one work session, may flip mid-session → **Mode**.
+   - Ambient for the lifetime of a project, set once → **Discipline**.
+   - Cannot reasonably opt out at any scope → **Baseline**.
+3. **Is it step-level mechanisable?** (expressible as "in skill X step Y, do Z")
+   - No → it's prose, belongs in `CLAUDE.md`, not in the role taxonomy.
+
+### Why these four roles
+
+The roles map to **who has agency over the toggle**:
+
+- Skill: caller decides per-invocation.
+- Mode: user decides per-session (highest agency for ambient behavior).
+- Discipline: project owner decides at setup (institutional commitment).
+- Baseline: plugin author decides; users cannot opt out.
+
+At any one skill Step, only currently-active modes + adopted disciplines + baselines fire. Each fire is a discrete enumerable rule, not ambient mood. Adding a new role-instance should not increase per-Step cognitive load unless that Step explicitly enumerates the new rule.
+
+Roles compose; they don't accumulate as global modifiers.
+
 ## Four doc kinds
 
 Constitution. Every doc is one of four kinds. Each has a lifecycle.
