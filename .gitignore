@@ -3,3 +3,9 @@
 *.swo
 node_modules/
 __pycache__/
+
+# Local project management — specs, plans, epics, ADRs in flight
+.swarm/
+.claude/m-workflow.yaml
+.claude/m-workflow.yaml.bak
+CLAUDE.local.md
