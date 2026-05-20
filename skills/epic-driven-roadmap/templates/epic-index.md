@@ -38,7 +38,7 @@ gitlab_issues: []
 
 ## Retrospective
 
-*(filled on close)*
+*(filled on close. If `scope-changes.jsonl` exists in this epic dir, review it for scope-expansion patterns — recurring expansions signal contracts scoped too narrowly upstream.)*
 
 **What worked**
 - …
