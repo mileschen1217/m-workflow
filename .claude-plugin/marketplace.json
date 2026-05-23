@@ -3,6 +3,6 @@
   "description": "Development marketplace for m-workflow plugin.",
   "owner": { "name": "miles_chen", "email": "mileschen1217@gmail.com" },
   "plugins": [
-    { "name": "m-workflow", "source": "./", "version": "0.1.3" }
+    { "name": "m-workflow", "source": "./", "version": "0.1.4" }
   ]
 }
