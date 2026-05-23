@@ -3,15 +3,23 @@
 **Date:** {{YYYY-MM-DD}}
 **Status:** Draft
 
-## Intention
+## Foundation
 
-> Filled at draft-mode entry per global CLAUDE.md § Working Style intention-alignment gate. Locks scope before any structural review. If the parent epic has an `## Intention` block, restate verbatim and confirm with the user; do not re-interrogate.
+> Set at Draft Mode Step 0 via elicitation. Full phase version, all three
+> fields — self-contained; must not require reading the parent epic to
+> interpret. If a parent epic exists, its foundation is the starting point;
+> sharpen to this phase's specifics. The spec has no tracker headline, so
+> aim lives here (unlike the epic, where aim lives in the headline).
 
-- **Goal (observable):** <What does success look like? Surface that observes success.>
-- **In scope:** <≤3 bullets — what this spec covers.>
-- **Out of scope (explicit):** <≤3 bullets — what this spec will NOT touch even if related. Each is a route NOT taken.>
-- **Fix vs. workaround:** <If a fixture / config knob / external workaround can achieve the goal, name it here. If proceeding with production-code change anyway, justify why the workaround is rejected.>
-- **Smallest change:** <Minimum diff size and shape — N files in M repos. Name what would expand it past minimum.>
+- **Intention (why):** <Full motivation: what hurts, what's broken, why
+  this work is worth doing now.>
+- **Aim:** <Observable goal: what does success look like for THIS spec's
+  scope? Name the surface that observes success (user message, test pass,
+  grep result, REST response).>
+- **Out of scope:** 
+  - <route this spec will NOT take, even if related — a route, not a
+    category>
+  - <up to three sub-bullets total; flat list, never nested>
 
 ## Source-level Deposit
 
@@ -35,9 +43,15 @@ What hurts today? Concrete, scoped, falsifiable. State the user or system pain w
 
 ## Scope
 
-**In scope:** bullet list of what this feature includes.
+(Optional) Implementation-level detail only — files, modules, repos. Boundary statements live in Foundation.out-of-scope; do not use legacy framing labels here.
 
-**Non-goals:** bullet list of what this feature does NOT cover. Explicit non-goals prevent scope creep during implementation.
+**Touched files/modules:**
+- <file or module path>
+
+> Foundation.aim above is a provisional direction set at Step 0. The
+> acceptance criteria below sharpen it into a testable form; that
+> sharpening is confirmed with the user during drafting — it is not
+> silently inherited.
 
 ## Acceptance Criteria
 

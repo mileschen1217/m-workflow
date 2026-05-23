@@ -97,16 +97,73 @@ Two distinct artifacts; do not conflate.
 
 ### Scaffold a new epic
 
-0. **Intention-alignment gate (mandatory)** — before slugging anything, run the gate from global CLAUDE.md § Working Style:
-   - Goal in observable terms (what does success look like?)
-   - In scope vs. explicitly out of scope (1-3 things this work will NOT touch)
-   - Fix the system or work around it? (if a fixture/config knob can solve it, name that path first)
-   - Smallest change that achieves the goal (diff size at minimum)
-   
-   Surface answers to user, get confirmation. Record the four answers verbatim in the epic's `index.md` under a `## Intention` block placed immediately after the YAML frontmatter and above `## Aim`. This is the single highest-ROI step in the whole skill — it prevents writing a spec for the wrong scope.
+0. **Foundation elicitation (Baseline — always runs)** — before slugging
+   anything, run the 3-field elicitation gate.
+
+   Reuse check FIRST (AC-10): if a foundation was already confirmed earlier
+   in THIS SAME skill invocation (a later procedure step re-enters Step 0),
+   do NOT re-elicit. Emit this EXACT log line verbatim (fixed emit string —
+   do not paraphrase, do not reword):
+   "Foundation already confirmed this session — reusing"
+   then reuse the confirmed foundation and skip to step e. Do NOT emit the
+   from-scratch opener. Reuse is same-invocation only; it never spans
+   separate invocations. Otherwise run the gate:
+
+   a. Open with this EXACT phrase (fixed emit string):
+      "Please describe the intended work in your own words." The substring
+      "describe the intended work in your own words" is what AC-7's bypass
+      fixtures match (Step-0 reached) and what AC-4 forbids as the
+      from-scratch opener — keep it verbatim, do not paraphrase. No fixed
+      follow-up questions — let the user give context freely.
+
+   b. Engage in a SHORT sharpening exchange. Ask only questions in
+      the ALLOWED column of the boundary table (§ Interfaces — Step-0
+      question boundary). Stop as soon as intention / aim / out-of-
+      scope are crisp. Never ask a question in the FORBIDDEN column
+      (architecture, files, dependencies, tests, API shape, effort,
+      rollout, or fix strategy) — those are design-phase decisions.
+
+   c. Synthesise a draft foundation and present it to the user using
+      these EXACT field labels (verbatim — AC-1/AC-2 match them
+      case-sensitively):
+      - "Intention (why):" motivation / pain in one line
+      - "Aim:" observable success at epic scope in one line
+        (recorded into the **Aim:** headline, not a ## Foundation field)
+      - "Out of scope:" ≤3 explicit routes not taken
+
+      The SYNTHESISED aim must not contain a vague token
+      {usually, typically, should, elegant, complex, careful, better}.
+      If the user's stated aim contains one, do NOT carry it into the
+      draft — re-prompt for an OBSERVABLE formulation: ask what the user
+      would observe or measure when it's done (targeted clarifying
+      questions are fine; "what would you observe when this is done?" is a
+      good default). Do not synthesise until the aim is observable. (AC-8.)
+
+      If the user declines to name any out-of-scope route, prompt
+      once: "can you name one thing this work will NOT touch, even if
+      related?" If still declined, record this EXACT sentinel verbatim
+      (fixed string — do not paraphrase, this literal only) as the
+      out-of-scope value: "(no explicit boundary declared)" AND add a
+      matching entry to the epic's Open Questions. The sentinel is the one
+      allowed placeholder.
+
+   d. Surface the draft foundation to the user and ask, with this exact
+      phrase: "Please confirm or edit this foundation." Do not proceed
+      to step 1 until confirmed. If the user insists on an aim that
+      contains a vague token, warn with this EXACT phrase verbatim (fixed
+      emit string — do not paraphrase, do not reword):
+      "(aim contains a vague token — accept anyway?)"
+      On accept, record the user's aim verbatim AND add this EXACT risk
+      note verbatim to Open Questions (do not paraphrase):
+      "(aim contains an unverifiable token — user-confirmed)"
+
+   e. Record the confirmed foundation: aim into the **Aim:** headline,
+      intention + out-of-scope into ## Foundation (template below).
+      This is the highest-ROI step — it prevents a spec being written
+      for the wrong scope.
 1. Pick a slug — lowercase, hyphen-separated, names the **deliverable surface** (e.g. `port-statistics-stacking`), not a phase number.
 2. Read the project's CLAUDE.md § Doc Routing to get the concrete `.swarm/epics/` path.
-3. Copy `templates/epic-index.md` to `<epics-dir>/<slug>/index.md`; fill in `slug`, `started` (today), `owner_teams`, `aim`, the **Intention block from step 0**, and Phase 1.
+3. Copy `templates/epic-index.md` to `<epics-dir>/<slug>/index.md`; fill in `slug`, `started` (today), `owner_teams`, aim into the `**Aim:**` headline, intention + out-of-scope into `## Foundation` (from step 0), and Phase 1.
 4. Add a row to `ROADMAP.md` § Active Epics: `| <slug> | <aim> | proposed | [index](<epics-dir>/<slug>/index.md) |`.
 5. When creating content docs (research, specs, plans, ADRs) for this epic, add frontmatter `epics: [<slug>]` so the backlink exists from day one. See `templates/content-doc.md`.
 5. Commit.

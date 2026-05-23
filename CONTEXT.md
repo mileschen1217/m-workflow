@@ -15,9 +15,9 @@ Four structural roles for cross-cutting behavior in the m-workflow plugin, disti
 | Role | Activation scope | How turned on | Example |
 |---|---|---|---|
 | **Skill** | per-invocation | `Skill` tool call | `grill-with-docs` |
-| **Mode** | per-session | user toggle (e.g. `/<mode-name>`) | `caveman`, `ground-as-source` |
+| **Mode** | per-session | user toggle (e.g. `/<mode-name>`) | `caveman`, `grounded-claims` |
 | **Discipline** | per-project | `.claude/m-workflow.yaml` `adopted_disciplines:` | `source-as-truth` |
-| **Baseline** | per-plugin | hard-coded into plugin | _(none currently)_ |
+| **Baseline** | per-plugin | hard-coded into plugin | `intention-first` |
 
 The four are exhaustive and mutually exclusive — every cross-cutting rule fits exactly one role.
 
@@ -47,6 +47,23 @@ The roles map to **who has agency over the toggle**:
 At any one skill Step, only currently-active modes + adopted disciplines + baselines fire. Each fire is a discrete enumerable rule, not ambient mood. Adding a new role-instance should not increase per-Step cognitive load unless that Step explicitly enumerates the new rule.
 
 Roles compose; they don't accumulate as global modifiers.
+
+### Current inventory
+
+The live set of role-instances. Single source of truth — ADRs classify; this table records what exists and its status.
+
+| Instance | Role | Status | Authority |
+|---|---|---|---|
+| `source-as-truth` | Discipline | Adopted, shipped | ADR-0004; this doc |
+| `intention-first` | Baseline | Building (Epic D); legacy always-on 4Q exists | ADR-0003 |
+| `grounded-claims` | Mode | Proposed; not yet in plugin (Epic A) | ADR-0002 |
+| `caveman` | Mode | External skill; not in plugin | global `~/.claude/skills/caveman` |
+
+`grounded-claims` was formerly named `ground-as-source`; renamed to disambiguate from the `source-as-truth` Discipline (they govern different relationships — doc↔source vs claim↔evidence; see ADR-0002).
+
+### Fire ordering (when multiple fire at one Step)
+
+When several baselines/disciplines/modes are active at the same skill Step, scope-framing fires before content-rules: **`intention-first` (Baseline) → `source-as-truth` (Discipline) → active Modes**. Rationale: the intention gate can reframe scope ("this is a fixture, not a spec") and abort the Step; running it first avoids wasted vocabulary-load cost.
 
 ## Four doc kinds
 
