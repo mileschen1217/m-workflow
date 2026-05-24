@@ -1,3 +1,13 @@
+---
+type: spec
+kind: bridge
+date: YYYY-MM-DD
+status: draft
+epics: []
+related: []
+kill-on: <epic-slug>
+---
+
 # {{feature-name}} — Design Spec
 
 **Date:** {{YYYY-MM-DD}}
@@ -55,15 +65,25 @@ What hurts today? Concrete, scoped, falsifiable. State the user or system pain w
 
 ## Acceptance Criteria
 
-Given/When/Then scenarios — the **outer ATDD loop's contract**. Cover happy path, error paths, boundary values. Each scenario is one row in the GWT grid.
+Given/When/Then scenarios — the **outer ATDD loop's contract**. Cover happy path, error paths, boundary values. Non-negotiable: every error path and boundary named here must correspond to at least one acceptance test scenario.
+
+Every AC carries a stable `AC-N` id (1-based, assigned at draft, never reused within a spec) and appears both in the index table and as a `### AC-N` block. The `Test` column is `_(filled when test lands)_` at draft time and is populated at Stage-5 ATDD with a test reference or grep command (this realises the CLAUDE.md spec↔test bidirectional cross-reference).
+
+### Index
+
+| AC | Name | Test |
+|---|---|---|
+| AC-1 | <short-name> | _(filled when test lands)_ |
+
+---
+
+### AC-1 — <full-name>
 
 ```
 Given <context>
 When <action>
 Then <observable outcome>
 ```
-
-Non-negotiable: every error path and boundary named here must correspond to at least one acceptance test scenario. This is what the outer ATDD loop asserts before declaring the feature done.
 
 ## Architecture
 
