@@ -169,3 +169,9 @@ When a subagent discovers mid-run that an Acceptance Criterion requires acting o
 This protocol organizes intent and auditability only. It does **not** enforce safety — preventing an unauthorized irreversible action is CC's own permission mode / hooks / sandbox / git, configured by the operator.
 
 Transport is agnostic: the request rides result.json (`status: needs-scope-expansion`) for one-shot subagents (stable), or the agent-teams `plan_approval_request` runtime channel (experimental) when enabled.
+
+## Template co-location
+
+Constitution. A template lives co-located with its sole owning skill at `skills/<skill>/templates/` (a `templates/` dir even for a single file). The root `templates/` dir is reserved for templates shared by 2+ skills. Skills reference their templates by **plugin-relative path**, never an absolute `~/.claude/skills/m-*` path.
+
+> Known violation, deferred to Epic A (consolidation): `arch-discovery` and `design-spec` reference their own bundled assets (template / lenses / coverage-matrix / exemplar / adr-authoring) via absolute `~/.claude/skills/m-*` paths. Recorded here; the systematic fix is not in scope for `doc-and-role-cleanup`.
