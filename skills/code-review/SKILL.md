@@ -80,7 +80,7 @@ When invoked with `batch` keyword, route to Pattern B — vendor-not-builder rev
      - `builder = cc` → reviewer = `codex-reviewer`
      - `builder = codex` → reviewer = `everything-claude-code:code-reviewer`
 4. Dispatch the resolved reviewer:
-   - `codex-reviewer` → `Agent(subagent_type: "codex-reviewer", description: "Codex batch review", prompt: { task: <full diff>, role: "batch-reviewer", task_dir: <optional> })`
+   - `codex-reviewer` → `Agent(subagent_type: "m-workflow:codex-reviewer", description: "Codex batch review", prompt: { task: <full diff>, role: "batch-reviewer", task_dir: <optional> })`
    - `everything-claude-code:code-reviewer` → corresponding Agent dispatch
 5. Single reviewer; no parallel dispatch in Pattern B. Output is the single reviewer's verdict.
 6. Surface findings; Critical / High block merge.

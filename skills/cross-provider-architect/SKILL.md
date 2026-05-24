@@ -38,7 +38,7 @@ codex --version >/dev/null 2>&1 && echo "codex_healthy=1" || echo "codex_healthy
 If `codex_healthy=1`, in ONE message issue BOTH:
 
 - `Agent(subagent_type: "everything-claude-code:architect", description: "CC architect", prompt: <task envelope>, model: "sonnet")`
-- `Agent(subagent_type: "codex-adversarial-reviewer", description: "Codex adversarial critique", prompt: <task envelope>)`
+- `Agent(subagent_type: "m-workflow:codex-adversarial-reviewer", description: "Codex adversarial critique", prompt: <task envelope>)`
 
 Wait for both to return before synthesizing.
 

@@ -39,7 +39,7 @@ codex --version >/dev/null 2>&1 && echo "codex_healthy=1" || echo "codex_healthy
 If `codex_healthy=1`, in ONE message issue BOTH:
 
 - `Agent(subagent_type: "everything-claude-code:code-reviewer", description: "CC review", prompt: <task envelope with system_prompt prefix>)`
-- `Agent(subagent_type: "codex-reviewer", description: "Codex review", prompt: <task envelope>)`
+- `Agent(subagent_type: "m-workflow:codex-reviewer", description: "Codex review", prompt: <task envelope>)`
 
 Wait for both to return before synthesizing.
 
