@@ -34,6 +34,11 @@ When drafting ## Acceptance Criteria:
 - The sharpened aim must stay traceable to the Step-0 direction. If the
   design work reveals the original direction was wrong, that is a scope
   signal — surface it, do not quietly substitute a new goal.
+- Every AC must appear in the `### Index` table with a stable `AC-N` id and
+  have a matching `### AC-N — <name>` block below it (1:1 — every index row
+  has a block, every block has a row). Assign N 1-based at draft; never reuse
+  within a spec. Leave the `Test` column `_(filled when test lands)_`; it is
+  populated at Stage-5 ATDD.
 
 ### Line-width policy (mandatory)
 
