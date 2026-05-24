@@ -10,7 +10,7 @@ user-invocable: true
 kind: workflow
 ---
 
-# /m-cross-provider-reviewer — Pattern A Composite Skill
+# /m-workflow:cross-provider-reviewer — Pattern A Composite Skill
 
 Skill body executes in main-thread context where `Agent` tool is available. Orchestrates parallel CC + Codex review and synthesizes with divergence labeling.
 

@@ -58,4 +58,4 @@ When dispatching a subagent for an investigation / debug / source-trace task (e.
 
 ## Composes with
 
-`/superpowers:systematic-debugging`, `/diagnose`, `/m-arch-discovery`, `/m-design-spec` — those handle the workflow (reproduce → hypothesise → fix; or explore → spec). This skill handles output discipline at sentence level. Invoke both for debug-shaped work; invoke this alone for design exploration / code review.
+`/superpowers:systematic-debugging`, `/diagnose`, `/m-workflow:arch-discovery`, `/m-workflow:design-spec` — those handle the workflow (reproduce → hypothesise → fix; or explore → spec). This skill handles output discipline at sentence level. Invoke both for debug-shaped work; invoke this alone for design exploration / code review.

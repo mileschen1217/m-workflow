@@ -10,9 +10,9 @@ user-invocable: true
 kind: workflow
 ---
 
-# /m-cross-provider-architect — Pattern A Composite Skill
+# /m-workflow:cross-provider-architect — Pattern A Composite Skill
 
-Same skill-form Pattern A shape as `m-cross-provider-reviewer`, but pairs CC `architect` with Codex `codex-adversarial-reviewer`. The asymmetry is intentional: CC validates, Codex critiques — different roles within Pattern A.
+Same skill-form Pattern A shape as `m-workflow:cross-provider-reviewer`, but pairs CC `architect` with Codex `codex-adversarial-reviewer`. The asymmetry is intentional: CC validates, Codex critiques — different roles within Pattern A.
 
 ## Inputs (JSON envelope as `args`)
 
@@ -27,7 +27,7 @@ Same skill-form Pattern A shape as `m-cross-provider-reviewer`, but pairs CC `ar
 
 ## Procedure
 
-### 1. Probe Codex (same as m-cross-provider-reviewer)
+### 1. Probe Codex (same as m-workflow:cross-provider-reviewer)
 
 ```bash
 codex --version >/dev/null 2>&1 && echo "codex_healthy=1" || echo "codex_healthy=0"
@@ -54,7 +54,7 @@ The two outputs are intentionally different in tone. Synthesis must:
 - Cross-reference: when an adversarial finding contradicts a validated decision, flag explicitly
 - End with a unified verdict: approve | revise | block — choose the more conservative across both
 
-### 4. Write artifacts (same shape as m-cross-provider-reviewer)
+### 4. Write artifacts (same shape as m-workflow:cross-provider-reviewer)
 
 - `<task_dir>/raw_cc.md` — architect output
 - `<task_dir>/raw_codex.jsonl` — adversarial reviewer output
@@ -67,7 +67,7 @@ Skill body's final assistant text: the synthesized review.md content.
 
 ## Failure semantics
 
-Same as `m-cross-provider-reviewer` — Codex probe/dispatch fail = CC-only fallback; both fail = `status: failed`; framework error = propagate.
+Same as `m-workflow:cross-provider-reviewer` — Codex probe/dispatch fail = CC-only fallback; both fail = `status: failed`; framework error = propagate.
 
 ## Cost note
 
