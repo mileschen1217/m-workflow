@@ -1,6 +1,6 @@
 # m-workflow
 
-A Claude Code plugin that bundles 12 workflow-stage skills (design-spec, design-review, arch-review, arch-discovery, epic-driven-roadmap, code-review, test-quality-audit, harness-audit, extract-knowledge, cross-provider-reviewer, cross-provider-architect, init) and one opinionated discipline (`source-as-truth`) that the skills load at runtime.
+A Claude Code plugin that bundles 10 workflow-stage skills (design-spec, design-review, arch-review, arch-discovery, epic-driven-roadmap, code-review, test-quality-audit, cross-provider-reviewer, cross-provider-architect, init) and one opinionated discipline (`source-as-truth`) that the skills load at runtime.
 
 ## Status
 
@@ -142,8 +142,6 @@ Without `<project>/.claude/m-workflow.yaml`: every stage skill runs in default m
 | `/m-workflow:epic-driven-roadmap` | Scaffold / close / audit epics. Includes Stage 7 doc reckoning when source-as-truth is adopted. |
 | `/m-workflow:code-review` | Per-commit or `batch` (per-feature) code review. |
 | `/m-workflow:test-quality-audit` | Audit test suite quality + coverage gaps. |
-| `/m-workflow:harness-audit` | Composite harness-health dashboard. |
-| `/m-workflow:extract-knowledge` | Distill research / session notes into reusable artifacts. |
 | `/m-workflow:cross-provider-reviewer` | Composite primitive: parallel review across CC + Codex with divergence labelling. |
 | `/m-workflow:cross-provider-architect` | Composite primitive: parallel architect across CC + Codex. |
 
