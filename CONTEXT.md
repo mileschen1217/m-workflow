@@ -56,7 +56,7 @@ The live set of role-instances. Single source of truth — ADRs classify; this t
 |---|---|---|---|
 | `source-as-truth` | Discipline | Adopted, shipped | ADR-0004; this doc |
 | `intention-first` | Baseline | Building (Epic D); legacy always-on 4Q exists | ADR-0003 |
-| `grounded-claims` | Mode | Proposed; not yet in plugin (Epic A) | ADR-0002 |
+| `grounded-claims` | Mode | Shipped, plugin-local (`skills/m-ground-in-source`) | ADR-0002 |
 | `caveman` | Mode | External skill; not in plugin | global `~/.claude/skills/caveman` |
 
 `grounded-claims` was formerly named `ground-as-source`; renamed to disambiguate from the `source-as-truth` Discipline (they govern different relationships — doc↔source vs claim↔evidence; see ADR-0002).
