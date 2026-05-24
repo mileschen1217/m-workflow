@@ -1,7 +1,7 @@
 {
   "name": "m-workflow",
   "description": "Workflow-discipline skill family: 11 stage skills + init.",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "author": { "name": "miles_chen", "email": "mileschen1217@gmail.com" },
   "license": "MIT",
   "keywords": ["workflow", "spec", "review", "epic", "discipline"]
