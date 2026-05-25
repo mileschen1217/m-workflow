@@ -37,7 +37,7 @@ kill-on: <epic-slug>
 >
 > Skip this section entirely in projects that have NOT adopted the `source-as-truth` discipline — leave the heading off.
 
-- **Lever this spec advances:** `<lever-slug>` — one of the project's lever menu (see project ROADMAP or CONTEXT.md § Four doc kinds), or `none`.
+- **Lever this spec advances:** `<lever-slug>` — one of the project's lever menu (the menu is per-project; see project ROADMAP. Lever-epic concept defined in CONTEXT.md § Validation rubric (load-bearing)), or `none`.
 - **If `none`:** justify in one sentence (e.g., "pure bug fix, no source-encoding gap exposed" or "lever not yet defined for this RC").
 - **Bridge docs this spec creates (if any):** list paths with `kill-on:` lever each declares. If a doc has no `kill-on:`, justify here (typically: navigation, workflow, or diagnostic — not bridge).
 - **Bridge docs this spec will retire on landing:** list paths the lever's land deletes.

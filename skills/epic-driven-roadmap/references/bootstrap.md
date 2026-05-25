@@ -22,6 +22,8 @@ Continue to step 1. Do NOT re-prompt paths; do NOT silently skip the notice.
 
 **Present AND `source-as-truth` already in `adopted_disciplines`** → continue silently.
 
+**Present but malformed (unparseable YAML)** → print the parse error naming the file; stop. Do NOT guess adoption state or overwrite. (Mirrors `init` Step 1's malformed-yaml branch.)
+
 Discipline-menu logic stays solely in `init`; bootstrap never duplicates it.
 
 ## Steps

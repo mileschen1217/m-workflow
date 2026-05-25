@@ -21,7 +21,7 @@ In-flight work (specs, plans, epics, draft ADRs) is **local-only** — see `CLAU
 
 Shared work moves through GitHub Issues, not committed `.md` files.
 
-- **Epics** → Issue labeled `epic`. Body links to the local `ROADMAP.md` row (machine-local tracker; the Issue is the shared surface of record).
+- **Epics** → Issue labeled `epic`. Body references the epic slug tracked in the local `ROADMAP.md` (machine-local tracker; the Issue is the shared surface of record — do not link to the local file from the shared Issue).
 - **Specs** → If the spec drove a non-trivial change, paste the Acceptance Criteria section or attach the final `.md` to the issue.
 - **Plans** → Inline as issue task list, or referenced from the epic.
 - **ADRs** → If the decision is final and externally interesting, promote to `docs/adr/` AND link from the relevant issue.
