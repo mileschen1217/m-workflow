@@ -168,6 +168,49 @@ When a subagent discovers mid-run that an Acceptance Criterion requires acting o
 
 This protocol organizes intent and auditability only. It does **not** enforce safety — preventing an unauthorized irreversible action is CC's own permission mode / hooks / sandbox / git, configured by the operator.
 
+## Two result.json artifacts (disambiguation)
+
+Two distinct on-disk artifacts were historically both called "result.json schema v1". They are different contracts with different owners; never conflate.
+
+| Term | **Task result** | **Review envelope** |
+|---|---|---|
+| Canonical name | `task-result.json` (`schema_version: 1.1`) | `review.result.json` (`review-envelope/v1`) |
+| Filename on disk | `result.json` | `review.result.json` |
+| Owner / source-of-truth | `epic-driven-roadmap` templates | `cross-provider-reviewer/references/provenance.md` (sole home — see § Dispatch provenance) |
+| Written by | `codex-implementer`, `codex-tdd` | the Pattern A composite bodies (`cross-provider-*`) and the Pattern B `code-review` body. The codex review agents are thin forwarders — they emit only `raw_codex.jsonl`, never the envelope. |
+| Answers | did the **task contract** execute? (files_changed, tests_passed, scope_change_request) | did the **review** run, and with what dispatch provenance? (raw evidence only — see § Dispatch provenance) |
+
+The review-envelope filename is `review.result.json` (not bare `result.json`) so the two cannot collide when a task_dir is shared.
+
+## Dispatch provenance
+
+The audit trail of *which providers actually reviewed* and whether the intended cross-vendor scrutiny happened. Recorded in `review.result.json` and surfaced loudly to the human; **audit-available, never enforced** (ADR-0007).
+
+> **Canonical contract:** `skills/cross-provider-reviewer/references/provenance.md` is the sole normative home for the `review-envelope/v1` schema, the correctness rules, and the banner format. This section is conceptual vocabulary — descriptive, not the contract. If the two ever disagree, provenance.md wins.
+
+**Raw evidence only is stored** — no derived/judgement fields land on disk. Consumers (human, audit) derive the correctness readings from the raw arrays at read time; the rule can change without rewriting old data.
+
+| Stored (raw) | Meaning |
+|---|---|
+| `providers_expected[]` | the provider set THIS invocation intended (default Pattern A = `{cc,codex}`; Pattern B swap = the single opposite-of-builder vendor; `with X` force = `{X}`) |
+| `providers_used[]` | who actually produced a review |
+| `builder_vendor` | Pattern B only — the vendor that built the code under review (for the builder≠reviewer check) |
+| `session_id` | codex audit anchor, extracted from `raw_codex.jsonl` by the composite / code-review body (NOT by the thin codex agent) |
+| `fallback_reason` | why a provider was absent, if any |
+
+Two **correctness readings** (derived, not stored):
+
+- **Quantity correctness** — `|providers_used| == |providers_expected|` and non-empty. Did we get the intended *number* of reviewers?
+- **Vendor correctness** — did the intended cross-vendor property hold? Pattern A: both distinct vendors ran. Pattern B: reviewer vendor ≠ `builder_vendor` (the swap held). `with X` force: requirement waived → reading is satisfied.
+
+These are orthogonal: a Pattern B run whose swapped reviewer fell back to the builder's own vendor is **quantity-correct (still 1 reviewer) but vendor-incorrect (swap failed)**.
+
+**`degraded`** — derived banner trigger, NOT a stored field. Conceptually `degraded = (!quantity_correct || !vendor_correct) && providers_used non-empty`, relative to *this invocation's intent* (a deliberate `with X` single-vendor run is not degraded; a total failure with empty `providers_used` is `status: failed`, not degraded). When true, the composite / code-review body prepends a loud `⚠️ DEGRADED …` banner to the returned synthesis; the calling stage skill passes it through to the human and does **not** hard-block the C+H gate on it. But a loud banner (DEGRADED or PARTIAL) does require an **informed-consent checkpoint**: the caller must obtain explicit human acknowledgement before the workflow proceeds — a human checkpoint orthogonal to the C+H gate (the human may proceed, but only knowingly). The exact formula + banner wording are owned by provenance.md (above) — this is the concept, not the contract.
+
+**Content quality is a separate axis.** `degraded` is about cross-vendor *completeness*. A provider that ran but returned unreliable output (e.g. codex JSONL with >5 malformed lines → `status: partial`) is surfaced by its own `⚠️ PARTIAL` banner, orthogonal to `degraded`; both can co-occur.
+
+**Provenance reference** — the single shared doc describing how to compute the two correctness readings, format the banner, and write the raw fields. Read by BOTH the `cross-provider-*` composites (Pattern A) and the `code-review` skill body (Pattern B, no composite). One home, no drift.
+
 Transport is agnostic: the request rides result.json (`status: needs-scope-expansion`) for one-shot subagents (stable), or the agent-teams `plan_approval_request` runtime channel (experimental) when enabled.
 
 ## Template co-location
