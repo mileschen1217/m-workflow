@@ -33,18 +33,18 @@ kill-on: <epic-slug>
 
 ## Source-level Deposit
 
-> Filled by author at draft time. Names the lever (source-level change) this spec advances, or "none" with reason. Per ADR `source-as-truth`: every feature epic carries a deposit budget so architecture compounds in source rather than prose. Stage 7 doc-reckoning reads this field at epic close.
+> Filled by author at draft time. Names the lever (source-level change) this spec advances, or "none" with reason. Per the `source-as-truth` discipline (see CONTEXT.md § Bridge content gate — three principles): every feature epic carries a deposit budget so architecture compounds in source rather than prose. Stage 7 doc-reckoning reads this field at epic close.
 >
-> Skip this section entirely in projects that have NOT adopted the `source-as-truth` ADR — leave the heading off.
+> Skip this section entirely in projects that have NOT adopted the `source-as-truth` discipline — leave the heading off.
 
-- **Lever this spec advances:** `<lever-slug>` — one of the project's lever menu (see project ROADMAP or the `source-as-truth` ADR), or `none`.
+- **Lever this spec advances:** `<lever-slug>` — one of the project's lever menu (see project ROADMAP or CONTEXT.md § Four doc kinds), or `none`.
 - **If `none`:** justify in one sentence (e.g., "pure bug fix, no source-encoding gap exposed" or "lever not yet defined for this RC").
 - **Bridge docs this spec creates (if any):** list paths with `kill-on:` lever each declares. If a doc has no `kill-on:`, justify here (typically: navigation, workflow, or diagnostic — not bridge).
 - **Bridge docs this spec will retire on landing:** list paths the lever's land deletes.
-- **Three-principle audit (per new bridge doc, per ADR `source-as-truth` § Bridge content gate):** for each bridge `.md` listed above, answer:
+- **Three-principle audit (per new bridge doc, per the `source-as-truth` discipline, CONTEXT.md § Bridge content gate — three principles):** for each bridge `.md` listed above, answer:
   - **P1 (non-duplication):** what fact does this carry that source does NOT encode? Name the source path(s) checked. **Also reject doc-as-workaround:** if the paragraph exists to explain why dead / duplicative / obsolete source still exists, file a PR to remove the source instead; do not write the paragraph.
   - **P2 (falsifiable):** how would a reader verify a claim in this doc? Name one concrete check (test / probe / grep).
-  - **P3 (no single host):** if you wrote this as a `///` doc-comment, which symbol would you attach it to? **One symbol** → rung 2, not a bridge. **One function body** → rung 3 (`// BRIDGE` block), not a `.md` bridge. **No answer (spans files/teams/languages, or describes negative space)** → rung 4 `.md`, justified. See ADR `source-as-truth` § Bridge content gate for worked examples.
+  - **P3 (no single host):** if you wrote this as a `///` doc-comment, which symbol would you attach it to? **One symbol** → rung 2, not a bridge. **One function body** → rung 3 (`// BRIDGE` block), not a `.md` bridge. **No answer (spans files/teams/languages, or describes negative space)** → rung 4 `.md`, justified. See CONTEXT.md § Bridge content gate — three principles for worked examples.
   - If any answer is missing or weak, fix the bridge content (delete duplicates / sharpen vague claims / move to rung 2-3) before submitting the spec.
 
 ## Problem
