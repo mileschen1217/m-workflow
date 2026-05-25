@@ -3,7 +3,7 @@
 
 # Required
 schema_version: 1
-created_by_plugin_version: 0.1.9
+created_by_plugin_version: 0.1.10
 specs_dir: .swarm/specs
 adr_dir: .swarm/docs/adr
 epics_dir: .swarm/epics
