@@ -57,6 +57,9 @@ Parse the args string left-to-right:
 
 When invoked with `batch` keyword, route to Pattern B — vendor-not-builder reviews.
 
+Provenance (schema, the 5 operations, both banner formats) is defined solely in
+`skills/cross-provider-reviewer/references/provenance.md`.
+
 ### Procedure
 
 1. Resolve the commit range:
@@ -82,8 +85,29 @@ When invoked with `batch` keyword, route to Pattern B — vendor-not-builder rev
 4. Dispatch the resolved reviewer:
    - `codex-reviewer` → `Agent(subagent_type: "m-workflow:codex-reviewer", description: "Codex batch review", prompt: { task: <full diff>, role: "batch-reviewer", task_dir: <optional> })`
    - `everything-claude-code:code-reviewer` → corresponding Agent dispatch  <!-- # EXTERNAL DEP — everything-claude-code (Epic B vendors this) -->
-5. Single reviewer; no parallel dispatch in Pattern B. Output is the single reviewer's verdict.
-6. Surface findings; Critical / High block merge.
+5. Single reviewer; no parallel dispatch in Pattern B.
+   **Normative fallback (M3):** if the swapped reviewer (e.g. `m-workflow:codex-reviewer`)
+   returns `status: failed` / a `fallback_reason` (codex unavailable), fall back to the
+   builder's OWN vendor (`everything-claude-code:code-reviewer` when builder=cc) and let
+   it produce the verdict. If BOTH the swap target and the builder-vendor fallback fail →
+   `status: failed`, `providers_used == []`, no banner.
+   **No pre-probe (L2):** do not add a `codex --version` pre-probe here — rely on the
+   `m-workflow:codex-reviewer` agent's own `status: failed` / `fallback_reason` as the
+   codex-availability signal.
+6. Compute provenance + banners per `skills/cross-provider-reviewer/references/provenance.md`
+   (sole canonical home — use the FULL plugin-relative path; a bare `references/provenance.md`
+   would wrongly resolve under `skills/code-review/references/`, which does not exist):
+   - `builder_vendor` = detected builder (`"cc"`/`"codex"`); `providers_used` = `[<the vendor that actually reviewed>]`.
+   - `providers_expected` = `["<opposite-of-builder>"]` for a swap, or `["X"]` with `force_reviewer = true` when invoked `with X`.
+   - Extract `session_id` from `raw_codex.jsonl` if codex ran (per that reference).
+   - Compute degraded (Operations 1–4) + partial (Operation 5); prepend banner(s) to the verdict text and to `<task_dir>/review.md` (when `task_dir` given).
+   - Write `<task_dir>/review.result.json` (review-envelope/v1; derived fields never written).
+7. Surface findings; Critical / High block merge.
+8. **Informed-consent checkpoint (CONSENT-3):** if the verdict carries a ⚠️ DEGRADED or
+   ⚠️ PARTIAL banner, present the banner to the user and obtain explicit acknowledgement
+   (an `AskUserQuestion` choice or an explicit user "proceed") BEFORE reporting the batch
+   as ready to proceed/commit. This is orthogonal to the C+H block — it applies even at
+   C+H == 0. A clean (no-banner) review does NOT trigger this checkpoint.
 
 ### Why Pattern B not Pattern A here
 
