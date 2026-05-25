@@ -14,13 +14,51 @@ Writes `.claude/m-workflow.yaml` in the current project, configuring paths and a
 
 ## Step 1 — Idempotence check
 
-Read `${CLAUDE_PROJECT_DIR}/.claude/m-workflow.yaml`. If it exists and the user did not pass `--reset`:
+Read `${CLAUDE_PROJECT_DIR}/.claude/m-workflow.yaml`.
 
-- Print the current config (paths + adopted disciplines).
-- Print "Run /m-workflow:init --reset to overwrite."
-- Exit 0.
+**If the file does not exist OR `--reset` was passed:** continue to Step 2.
 
-If it does not exist OR `--reset` was passed, continue to Step 2.
+**If the file exists and is unparseable (malformed YAML):** print an error naming the file and the parse error line; do NOT silently overwrite; exit non-zero.
+
+**If the file exists, is parseable, and `--reset` was NOT passed:**
+
+1. Print the current config (paths + adopted disciplines).
+
+2. Check whether the `adopted_disciplines` key is present. If missing, treat it as an empty list.
+
+3. The supported discipline today is `source-as-truth` (single-entry list; a registry-derived menu is deferred to E15). If `source-as-truth` is already in `adopted_disciplines`, print "Run /m-workflow:init --reset to overwrite." and exit 0.
+
+4. **If `source-as-truth` is NOT yet adopted**, show the incremental-add menu:
+
+   ```
+   Current config:
+     specs_dir:           .swarm/specs
+     adr_dir:             .swarm/docs/adr
+     epics_dir:           .swarm/epics
+     plans_dir:           .swarm/plans
+     archive_specs_dir:   .swarm/archive/specs
+     adopted_disciplines: [] (or the current list)
+
+   Disciplines:
+     ○ source-as-truth — enables Bridge content audit + kill-on lifecycle + standing-vs-transient classification in stage skills that support it.
+
+   Adopt source-as-truth? [Y/n]
+   ```
+
+   (Print each adopted discipline with a `✓` prefix and each not-yet-adopted one with `○`. Today only `source-as-truth` exists, so the menu shows exactly one line.)
+
+   Accept the answer (or the `--adopt source-as-truth` flag). Merge the selection into `adopted_disciplines` **without touching paths**. Then write the updated yaml (Step 5 write logic, paths unchanged) and print the verification summary (Step 6).
+
+5. **Non-interactive context (no TTY):** if `source-as-truth` is not yet adopted and no `--adopt` flag was passed, print:
+
+   ```
+   [m-workflow:init] Non-interactive: source-as-truth available but not adopted.
+   Re-run interactively or pass --adopt source-as-truth to add.
+   ```
+
+   Then exit 0 (not an error; the existing config is valid).
+
+**`--reset` semantics (full overwrite) are unchanged** — passing `--reset` skips all of the above and proceeds to Step 2.
 
 ## Step 2 — Collect paths
 
