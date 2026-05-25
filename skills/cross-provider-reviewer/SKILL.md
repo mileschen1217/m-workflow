@@ -60,31 +60,23 @@ Always emit a `## Divergence` section when verdicts disagree. Never silently mer
 
 ### 4. Compute provenance, prepend banners, write artifacts
 
-Compute the dispatch provenance per `references/provenance.md` (the sole canonical
-home of the schema, the 5 operations, and both banner formats):
+All field definitions, the correctness operations, the banner formats/ordering, and
+the no-derived-fields rule live SOLELY in `references/provenance.md`. This body gives
+only the ACTIONS; it restates none of those definitions.
 
-1. Set `providers_expected`: default `["cc","codex"]`; if a `with X` modifier was
-   passed in the envelope, `["X"]` and `force_reviewer = true` (else false).
-2. Set `providers_used`: the vendors that actually returned review content (`"cc"`
-   if the ECC reviewer returned, `"codex"` if the codex leg returned). `builder_vendor`
-   is null (Pattern A has no builder).
-3. Extract `session_id` from `<task_dir>/raw_codex.jsonl` per provenance.md's
-   session_id-extraction recipe (null if codex did not run or no id found).
-4. Compute `quantity_correct`, `vendor_correct`, `degraded` (Operations 1–3).
-   If `degraded`, build the DEGRADED banner (Operation 4).
-5. If `status == "partial"` (codex leg unreliable, e.g. >5 malformed JSONL lines),
-   build the PARTIAL banner (Operation 5). When both fire, DEGRADED first, PARTIAL second.
-6. Prepend the banner(s) (if any) to the synthesis text AND to `review.md`,
-   followed by a blank line, then the review body.
+1. Record `providers_expected` and `providers_used` for THIS invocation per
+   provenance.md. `builder_vendor` is null (Pattern A has no builder).
+2. Extract `session_id` from `<task_dir>/raw_codex.jsonl` per provenance.md.
+3. Determine degraded/partial and, if either holds, build and prepend the banner(s)
+   to the synthesis text AND to `review.md` (then a blank line, then the review body),
+   per provenance.md.
 
 Write artifacts (if `task_dir` provided):
 - `<task_dir>/raw_cc.md` — CC reviewer output verbatim
 - `<task_dir>/raw_codex.jsonl` — Codex reviewer output (raw JSONL)
 - `<task_dir>/review.md` — synthesized review (banner-prepended when degraded/partial)
-- `<task_dir>/review.result.json` — the review-envelope/v1 artifact. Field list,
-  types, and the no-derived-fields rule are defined SOLELY in `references/provenance.md`
-  (this body restates none of it). Derived fields (`quantity_correct`, `vendor_correct`,
-  `degraded`) are NEVER written.
+- `<task_dir>/review.result.json` — the review-envelope/v1 artifact, written per
+  `references/provenance.md` (sole definition of its fields and the no-derived-fields rule).
 
 ### 5. Return synthesized review
 
@@ -96,10 +88,9 @@ Skill body's final assistant text: the synthesized review.md content. The orches
 
 ## Failure semantics
 
-- Codex probe / dispatch fail → CC-only synthesis with `fallback_reason`; `providers_used = ["cc"]`; `status: ok`; DEGRADED banner (quantity+vendor incorrect).
-- Both reviewers fail → `status: failed`, both errors in `risks[]`, `providers_used = []`, `providers_expected` still recorded, no synthesis, NO banner (compute_degraded's non-empty guard).
+- Codex probe / dispatch fail → CC-only synthesis; record provenance + prepend the banner if applicable, per `references/provenance.md`.
+- Both reviewers fail → no synthesis; surface as failure and record provenance per `references/provenance.md`.
 - Skill itself errors (framework) → propagate to caller.
-- All correctness/banner rules are defined in `references/provenance.md`.
 
 ## Cost note
 
@@ -109,4 +100,4 @@ Pattern A — ~2× tokens per invocation. Only invoked at high-leverage gates: d
 
 - `everything-claude-code:code-reviewer` (ECC, EXTERNAL) — CC review backend. Epic B vendors or makes optional.
 - `m-workflow:codex-reviewer` (plugin-local) — Codex review backend.
-- CC-only fallback: if ECC absent, run available provider(s) only + emit synthesis with a `fallback_reason` note; if BOTH absent → no synthesis, surfaced as failure. (Loud-degraded metadata deferred to E14.)
+- CC-only fallback: if a provider is absent, run the available provider(s), write `review.result.json` with the resulting `providers_used` / `fallback_reason`, and prepend the DEGRADED banner per `references/provenance.md`; if BOTH absent → no synthesis, surfaced as failure (envelope still written per provenance.md).

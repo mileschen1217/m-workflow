@@ -58,16 +58,15 @@ The two outputs are intentionally different in tone. Synthesis must:
 
 Same procedure as `m-workflow:cross-provider-reviewer` Step 4, per the sole canonical
 `skills/cross-provider-reviewer/references/provenance.md` (this composite reads the SAME
-reference — no copy here). `providers_expected` default `["cc","codex"]`; `builder_vendor`
-null (Pattern A). Extract `session_id` from `raw_codex.jsonl` per
-`skills/cross-provider-reviewer/references/provenance.md`. Compute degraded
-(Operations 1–4) and partial (Operation 5) banners; prepend to synthesis + review.md.
+reference — no copy here). `builder_vendor` is null (Pattern A). Record provenance,
+extract `session_id` from `raw_codex.jsonl`, and prepend the banner(s) if degraded/partial
+— all per that reference, which holds every field/operation/banner definition.
 
 Write artifacts (if `task_dir` provided):
 - `<task_dir>/raw_cc.md` — architect output
 - `<task_dir>/raw_codex.jsonl` — adversarial reviewer output (raw JSONL)
 - `<task_dir>/review.md` — synthesis (banner-prepended when degraded/partial)
-- `<task_dir>/review.result.json` — review-envelope/v1 (schema + rules SOLELY in `skills/cross-provider-reviewer/references/provenance.md`; derived fields never written)
+- `<task_dir>/review.result.json` — review-envelope/v1, written per `skills/cross-provider-reviewer/references/provenance.md` (sole definition of its fields and the no-derived-fields rule)
 
 ### 5. Return synthesis to caller
 
@@ -75,10 +74,10 @@ Skill body's final assistant text: the synthesized review.md content.
 
 ## Failure semantics
 
-- Codex probe / dispatch fail → CC-only synthesis with `fallback_reason`; `providers_used = ["cc"]`; `status: ok`; DEGRADED banner (quantity+vendor incorrect).
-- Both reviewers fail → `status: failed`, both errors in `risks[]`, `providers_used = []`, `providers_expected` still recorded, no synthesis, NO banner.
+- Codex probe / dispatch fail → CC-only synthesis; record provenance + prepend the banner if applicable, per `skills/cross-provider-reviewer/references/provenance.md`.
+- Both reviewers fail → no synthesis; surface as failure and record provenance per that reference.
 - Skill itself errors (framework) → propagate to caller.
-- The review-envelope is written as `review.result.json`; all correctness/banner rules are defined SOLELY in `skills/cross-provider-reviewer/references/provenance.md`.
+- The review-envelope is written as `review.result.json`, per `skills/cross-provider-reviewer/references/provenance.md` (sole definition of its fields and rules).
 
 ## Cost note
 
@@ -88,4 +87,4 @@ Pattern A — ~2× tokens. Reserved for highest-leverage gates: `/m-workflow:arc
 
 - `everything-claude-code:architect` (ECC, EXTERNAL) — CC validation backend. Epic B vendors or makes optional.
 - `m-workflow:codex-adversarial-reviewer` (plugin-local) — Codex adversarial-critique backend.
-- CC-only fallback: if ECC absent, run available provider(s) only + emit synthesis with a `fallback_reason` note; if BOTH absent → no synthesis, surfaced as failure. (Loud-degraded metadata deferred to E14.)
+- CC-only fallback: if a provider is absent, run the available provider(s), write `review.result.json` with the resulting `providers_used` / `fallback_reason`, and prepend the DEGRADED banner per `skills/cross-provider-reviewer/references/provenance.md`; if BOTH absent → no synthesis, surfaced as failure (envelope still written per that reference).

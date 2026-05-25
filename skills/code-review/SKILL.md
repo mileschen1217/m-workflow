@@ -65,7 +65,9 @@ Provenance (schema, the 5 operations, both banner formats) is defined solely in
 1. Resolve the commit range:
    - `/m-workflow:code-review batch <range>` → use `<range>`
    - `/m-workflow:code-review batch` → default `$(git merge-base HEAD main)..HEAD` (or `master`; project CLAUDE.md may override)
-2. Detect builder (skipped if `force_reviewer` is set):
+2. Detect builder (ALWAYS run — the E14 envelope needs `builder_vendor` even under
+   `force_reviewer`; force waives only the reviewer swap in Step 3 and the
+   vendor-correctness requirement, NOT builder detection):
    - Scan commit-message trailers in the range:
      ```
      git log --format=%B <range> | grep -iE '^Co-Authored-By:.*(codex|gpt-?5|openai)'
@@ -94,14 +96,18 @@ Provenance (schema, the 5 operations, both banner formats) is defined solely in
    **No pre-probe (L2):** do not add a `codex --version` pre-probe here — rely on the
    `m-workflow:codex-reviewer` agent's own `status: failed` / `fallback_reason` as the
    codex-availability signal.
-6. Compute provenance + banners per `skills/cross-provider-reviewer/references/provenance.md`
+6. Write provenance + banners per `skills/cross-provider-reviewer/references/provenance.md`
    (sole canonical home — use the FULL plugin-relative path; a bare `references/provenance.md`
-   would wrongly resolve under `skills/code-review/references/`, which does not exist):
-   - `builder_vendor` = detected builder (`"cc"`/`"codex"`); `providers_used` = `[<the vendor that actually reviewed>]`.
-   - `providers_expected` = `["<opposite-of-builder>"]` for a swap, or `["X"]` with `force_reviewer = true` when invoked `with X`.
-   - Extract `session_id` from `raw_codex.jsonl` if codex ran (per that reference).
-   - Compute degraded (Operations 1–4) + partial (Operation 5); prepend banner(s) to the verdict text and to `<task_dir>/review.md` (when `task_dir` given).
-   - Write `<task_dir>/review.result.json` (review-envelope/v1; derived fields never written).
+   would wrongly resolve under `skills/code-review/references/`, which does not exist).
+   That reference holds every field/operation/banner definition; this body gives only actions:
+   - Record `builder_vendor` = the detected builder from Step 2 (`"cc"`/`"codex"`). This is
+     ALWAYS set, including under `force_reviewer` (Step 2 always runs detection).
+   - Record `providers_used` (the vendor that actually reviewed) and `providers_expected`
+     for THIS invocation per provenance.md.
+   - Extract `session_id` from `raw_codex.jsonl` if codex ran, per that reference.
+   - If degraded/partial, build and prepend the banner(s) to the verdict text and to
+     `<task_dir>/review.md` (when `task_dir` given), per that reference.
+   - Write `<task_dir>/review.result.json` (review-envelope/v1) per that reference.
 7. Surface findings; Critical / High block merge.
 8. **Informed-consent checkpoint (CONSENT-3):** if the verdict carries a ⚠️ DEGRADED or
    ⚠️ PARTIAL banner, present the banner to the user and obtain explicit acknowledgement
