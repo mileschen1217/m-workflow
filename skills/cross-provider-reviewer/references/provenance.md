@@ -75,3 +75,16 @@ writer when a `with X` modifier governed the invocation (code-review batch, or a
 - DEGRADED (derived): cross-vendor completeness (quantity + vendor).
 - PARTIAL (derived): content quality (a provider ran but output unreliable; `status==partial`).
 - A degraded review that still produced output is `status: ok`. Both banners can co-occur.
+
+## session_id extraction (from raw_codex.jsonl)
+
+The composite / code-review body (NOT the thin agent) reads `<task_dir>/raw_codex.jsonl`
+after the codex agent completes and extracts the session id into `review.result.json.session_id`.
+
+Field path: the `thread.started` event's `thread_id` key (codex-cli 0.128.0, confirmed 2026-05-26).
+Extraction: `jq -rR 'fromjson? | select(.type=="thread.started") | .thread_id // empty' raw_codex.jsonl | head -1`
+(empty → `session_id = null`).
+
+Note: use per-line `fromjson?` (not a plain `jq select`) — `raw_codex.jsonl` can contain a
+non-JSON stderr banner line (`Reading additional input from stdin...`) because the agent
+dispatches `codex exec … 2>&1`; a plain `jq` parse aborts on that line, `fromjson?` skips it.
