@@ -29,6 +29,11 @@ kind: workflow
 > Read `${CLAUDE_PLUGIN_ROOT}/skills/_shared/step0-resolver.md`
 > with the Read tool and follow it exactly.
 
+If `source-as-truth` is in `bundle.disciplines`, also read
+`${CLAUDE_PLUGIN_ROOT}/CONTEXT.md` § "Bridge content gate" AND
+§ "Standing vs transient bridge" and include the loaded text verbatim in
+the envelope below.
+
 When dispatching to `m-workflow:cross-provider-architect`, set envelope:
 ```json
 {
