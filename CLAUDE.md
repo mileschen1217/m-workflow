@@ -15,7 +15,7 @@ A Claude Code plugin: skills + commands + agents under `.claude-plugin/`, `skill
 | Plugin source | `skills/`, `agents/`, `commands/`, `.claude-plugin/` | The plugin itself |
 | Scripts | `scripts/` | Migration / audit / smoke helpers |
 
-In-flight work (specs, plans, epics, draft ADRs) is **local-only** — see `CLAUDE.local.md`. Promote to the public surfaces above when an artifact is stable and externally relevant. `ROADMAP.md` is part of this local-only set — it is the machine-local epic tracker indexing `.swarm/epics/`, gitignored, not a public committed surface (see `CLAUDE.local.md § Local Doc Routing`).
+In-flight work (specs, plans, epics, draft ADRs) is **local-only** — see `CLAUDE.local.md`. Promote to the public surfaces above when an artifact is stable and externally relevant. `ROADMAP.md` is part of this local-only set — it is the machine-local epic tracker indexing `.m-workflow/epics/`, gitignored, not a public committed surface (see `CLAUDE.local.md § Local Doc Routing`).
 
 ## Issue Tracking — GitHub
 
