@@ -32,11 +32,7 @@ Read `${CLAUDE_PROJECT_DIR}/.claude/m-workflow.yaml`.
 
    ```
    Current config:
-     specs_dir:           .swarm/specs
-     adr_dir:             .swarm/docs/adr
-     epics_dir:           .swarm/epics
-     plans_dir:           .swarm/plans
-     archive_specs_dir:   .swarm/archive/specs
+     workspace_root:      .m-workflow (or the current value)
      adopted_disciplines: [] (or the current list)
 
    Disciplines:
@@ -62,15 +58,11 @@ Read `${CLAUDE_PROJECT_DIR}/.claude/m-workflow.yaml`.
 
 ## Step 2 — Collect paths
 
-Prompt the user for each path (or accept the matching `--<dir>-name` flag if present):
+Prompt the user for the workspace root (or accept the matching flag if present):
 
 | Flag | Prompt | Default |
 |---|---|---|
-| `--specs-dir <path>` | Where do design specs live? | `.swarm/specs` |
-| `--adr-dir <path>` | Where do ADRs live? | `.swarm/docs/adr` |
-| `--epics-dir <path>` | Where do epic trackers live? | `.swarm/epics` |
-| `--plans-dir <path>` | Where do plans live? | `.swarm/plans` |
-| `--archive-specs-dir <path>` | Where do retired specs go? | `.swarm/archive/specs` |
+| `--workspace-root <path>` | Workspace root? | `.m-workflow` |
 
 Values are taken verbatim. **MVP sharp edge: path escape (`../../...`) is NOT rejected.** Production hardening (reject paths outside `${CLAUDE_PROJECT_DIR}`) is deferred.
 
@@ -83,10 +75,15 @@ Supported disciplines (MVP):
 
 ## Step 4 — Create target dirs
 
-For each collected path (`specs_dir`, `adr_dir`, `epics_dir`, `plans_dir`, `archive_specs_dir`):
+Create all six derived subpaths under `workspace_root`:
 
 ```bash
-mkdir -p "${CLAUDE_PROJECT_DIR}/<path>"
+mkdir -p "${CLAUDE_PROJECT_DIR}/<workspace_root>/specs"
+mkdir -p "${CLAUDE_PROJECT_DIR}/<workspace_root>/docs/adr"
+mkdir -p "${CLAUDE_PROJECT_DIR}/<workspace_root>/epics"
+mkdir -p "${CLAUDE_PROJECT_DIR}/<workspace_root>/plans"
+mkdir -p "${CLAUDE_PROJECT_DIR}/<workspace_root>/archive/specs"
+mkdir -p "${CLAUDE_PROJECT_DIR}/<workspace_root>/research"
 ```
 
 If `mkdir` fails (permission, invalid path), print error naming the path, exit non-zero.
@@ -96,18 +93,9 @@ If `mkdir` fails (permission, invalid path), print error naming the path, exit n
 Write `${CLAUDE_PROJECT_DIR}/.claude/m-workflow.yaml`:
 
 ```yaml
-# Written by /m-workflow:init. Hand-editable.
-
-# Required
-schema_version: 1
-created_by_plugin_version: 0.1.0
-specs_dir: <answer>
-adr_dir: <answer>
-epics_dir: <answer>
-plans_dir: <answer>
-archive_specs_dir: <answer>
-
-# Optional
+# written by /m-workflow:init vX.Y.Z. Hand-editable.
+schema_version: 2
+workspace_root: <answer or .m-workflow>
 adopted_disciplines: [<comma-separated answers>]
 ```
 
@@ -119,11 +107,7 @@ Print:
 
 ```
 ✓ Wrote ${CLAUDE_PROJECT_DIR}/.claude/m-workflow.yaml
-  specs_dir:        <value>
-  adr_dir:          <value>
-  epics_dir:        <value>
-  plans_dir:        <value>
-  archive_specs_dir: <value>
+  workspace_root:      <value>
   adopted_disciplines: [<values>]
 
 Next: try /m-workflow:design-spec <feature-name>
@@ -134,10 +118,16 @@ Next: try /m-workflow:design-spec <feature-name>
 ```
 /m-workflow:init                              # interactive (default)
 /m-workflow:init --adopt <discipline>         # repeatable
-/m-workflow:init --specs-dir <path>
-/m-workflow:init --adr-dir <path>
-/m-workflow:init --epics-dir <path>
-/m-workflow:init --plans-dir <path>
-/m-workflow:init --archive-specs-dir <path>
+/m-workflow:init --workspace-root <path>      # override workspace root (default .m-workflow)
 /m-workflow:init --reset                      # overwrite existing yaml
+/m-workflow:init --migrate                    # migrate schema-1 yaml to schema-2
 ```
+
+### `--migrate` behaviour
+
+When `--migrate` is passed:
+
+Read `${CLAUDE_PLUGIN_ROOT}/skills/_shared/step0-resolver.md`
+with the Read tool and follow it exactly.
+
+The resolver's §3 migration steps handle reading the old schema-1 keys, deriving `workspace_root`, writing the new schema-2 yaml, and printing a diff summary. Do not duplicate that logic here.
