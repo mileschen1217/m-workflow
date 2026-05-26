@@ -52,27 +52,22 @@ Discovery is the system-definition layer. Specs (Stage 3) inherit its system mod
 
 ## Setup Mode
 
-Triggered when `.claude/arch-discovery.yaml` does not exist in the project, OR the topic doesn't yet have a discovery doc.
+Triggered when the topic doesn't yet have a discovery doc.
 
-Interactive flow:
-1. Confirm output directory — defaults from project's CLAUDE.md § Doc Routing for the "What might work?" stage. Typical: `.swarm/research/<topic>/`.
-2. Write `.claude/arch-discovery.yaml`:
-   ```yaml
-   discovery_dir: .swarm/research
-   template: ~/.claude/skills/m-workflow:arch-discovery/template.md
-   lenses: ~/.claude/skills/m-workflow:arch-discovery/lenses.md
-   matrix: ~/.claude/skills/m-workflow:arch-discovery/coverage-matrix.md
-   ```
-3. Create `<discovery_dir>/<topic>/` if missing.
-4. Copy template to `<discovery_dir>/<topic>/YYYY-MM-DD-<slug>-discovery.md`.
-5. **Verify frontmatter contract** — the new doc MUST carry `type: discovery` in its frontmatter (the template provides it; do not strip it). This is a load-bearing cross-skill contract: `/m-workflow:design-review` recognizes discovery docs by `type: discovery` (or by path matching `**/research/**/*-discovery.md`, but the type field is authoritative). Without it, the end-of-discovery audit gate returns "out of scope" and the doc cannot be handed off to `/m-workflow:design-spec`. If your `discovery_dir` does NOT match the path glob (e.g. you chose `.swarm/arch/` instead of `.swarm/research/`), the `type: discovery` frontmatter is the *only* signal `/m-workflow:design-review` will see — preserve it carefully.
-6. Bootstrap §0 matrix: rows from user's initial feature list (if provided), full L1–L16 columns, all cells `unset`.
-7. Add frontmatter `epics: [<slug>]` if a matching epic index exists under the project's epic dir (per CLAUDE.md § Doc Routing). Adds alongside the mandatory `type: discovery` — does not replace it.
-8. **Show the author a worked exemplar before drafting.** This is the cheapest defense against the "bullets-only first draft" failure mode. Two paths:
-   - **Preferred (when an exemplar exists)** — `~/.claude/skills/m-workflow:arch-discovery/exemplar/` holds a canonical realized §1.1 / §1.2 / §1.3 trio. Read it. The author opens Discovery Mode having *seen* the target shape (Narrative paragraphs → Mermaid diagram → Claims), not just having read instructions to produce it.
+> Read `${CLAUDE_PLUGIN_ROOT}/skills/_shared/step0-resolver.md`
+> with the Read tool and follow it exactly.
+
+Source the output directory from `bundle.research` (the resolver's bundle). Interactive flow:
+1. Create `<bundle.research>/<topic>/` if missing.
+2. Copy template to `<bundle.research>/<topic>/YYYY-MM-DD-<slug>-discovery.md`.
+3. **Verify frontmatter contract** — the new doc MUST carry `type: discovery` in its frontmatter (the template provides it; do not strip it). This is a load-bearing cross-skill contract: `/m-workflow:design-review` recognizes discovery docs by `type: discovery` (or by path matching `**/research/**/*-discovery.md`, but the type field is authoritative). Without it, the end-of-discovery audit gate returns "out of scope" and the doc cannot be handed off to `/m-workflow:design-spec`. If your `bundle.research` does NOT match the path glob (e.g. you chose `.swarm/arch/` instead of `.swarm/research/`), the `type: discovery` frontmatter is the *only* signal `/m-workflow:design-review` will see — preserve it carefully.
+4. Bootstrap §0 matrix: rows from user's initial feature list (if provided), full L1–L16 columns, all cells `unset`.
+5. Add frontmatter `epics: [<slug>]` if a matching epic index exists under the project's epic dir (per CLAUDE.md § Doc Routing). Adds alongside the mandatory `type: discovery` — does not replace it.
+6. **Show the author a worked exemplar before drafting.** This is the cheapest defense against the "bullets-only first draft" failure mode. Two paths:
+   - **Preferred (when an exemplar exists)** — `${CLAUDE_PLUGIN_ROOT}/skills/arch-discovery/exemplar/` holds a canonical realized §1.1 / §1.2 / §1.3 trio. Read it. The author opens Discovery Mode having *seen* the target shape (Narrative paragraphs → Mermaid diagram → Claims), not just having read instructions to produce it.
    - **Fallback (no exemplar yet)** — surface a 1-screen synthetic excerpt inline in the chat that demonstrates the Narrative + Diagram + Claims shape on a generic topic (e.g. a 2-actor system). The author calibrates on tone and density before authoring §1.
    Either way, the exit criterion is: "the author has seen, in this session, what a fully-realized §1.X looks like." Skipping this step reliably produces an axiom-list first draft that costs 1–2 iterations to recover from.
-9. Hand off to Discovery Mode.
+7. Hand off to Discovery Mode.
 
 ## Discovery Mode
 
@@ -85,7 +80,7 @@ Inputs to collect:
 4. **Carry-over material** — paths to existing exploration notes that should seed sections.
 
 Drafting workflow:
-1. **Read** template, lenses, and coverage-matrix from skill dir.
+1. **Read** template from `${CLAUDE_PLUGIN_ROOT}/skills/arch-discovery/template.md`, lenses from `${CLAUDE_PLUGIN_ROOT}/skills/arch-discovery/lenses.md`, and coverage-matrix from `${CLAUDE_PLUGIN_ROOT}/skills/arch-discovery/coverage-matrix.md`.
 2. **Read** carry-over material; map each chunk to (section, lens) cells.
 3. **Draft §1 system model first** — roles, ownership, invariants. Without this, downstream sections have nothing to cite. Every section follows the **Narrative → Diagram → Claims** shape spelled out at the top of `template.md`. Bullet-only sections are a defect — they read as axiom lists and lose the human-alignment audience.
 4. **Draft §2 platform behavior surface** — explicit capability / constraint / forced-behavior layout. For embedded / ASIC systems, this is load-bearing; do not skip.
@@ -175,9 +170,9 @@ Parse left-to-right:
 
 ## Related
 
-- Template: `~/.claude/skills/m-workflow:arch-discovery/template.md`
-- Lens definitions: `~/.claude/skills/m-workflow:arch-discovery/lenses.md`
-- Coverage-matrix protocol: `~/.claude/skills/m-workflow:arch-discovery/coverage-matrix.md`
+- Template: `${CLAUDE_PLUGIN_ROOT}/skills/arch-discovery/template.md`
+- Lens definitions: `${CLAUDE_PLUGIN_ROOT}/skills/arch-discovery/lenses.md`
+- Coverage-matrix protocol: `${CLAUDE_PLUGIN_ROOT}/skills/arch-discovery/coverage-matrix.md`
 - Upstream: Topic 2 exploration routing (`~/.claude/CLAUDE.md`)
 - Adjacent: `/m-workflow:arch-review` for per-question consults
 - Downstream: `/m-workflow:design-spec` for contract authoring
