@@ -1,14 +1,5 @@
-# Written by /m-workflow:init (dogfooded at E13 bootstrap). Hand-editable.
-# This file is committed — anyone who clones the m-workflow repo inherits the adoption.
-
-# Required
-schema_version: 1
-created_by_plugin_version: 0.1.10
-specs_dir: .swarm/specs
-adr_dir: .swarm/docs/adr
-epics_dir: .swarm/epics
-plans_dir: .swarm/plans
-archive_specs_dir: .swarm/archive/specs
-
-# Optional
+# written by /m-workflow:init (dogfood, migrated E15). Hand-editable.
+# This file is committed — clones inherit the adoption.
+schema_version: 2
+workspace_root: .m-workflow
 adopted_disciplines: [source-as-truth]

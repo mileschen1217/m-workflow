@@ -5,7 +5,7 @@ node_modules/
 __pycache__/
 
 # Local project management — specs, plans, epics, ADRs in flight
-.swarm/
+.m-workflow/
 .claude/m-workflow.yaml.bak
 .claude/worktrees/
 CLAUDE.local.md

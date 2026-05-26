@@ -54,7 +54,7 @@ The live set of role-instances. Single source of truth — ADRs classify; this t
 
 | Instance | Role | Status | Authority |
 |---|---|---|---|
-| `source-as-truth` | Discipline | Adopted, shipped | this doc (rationale: local .swarm/docs/adr/0004-*) |
+| `source-as-truth` | Discipline | Adopted, shipped | this doc (rationale: local .m-workflow/docs/adr/0004-*) |
 | `intention-first` | Baseline | Building (Epic D); legacy always-on 4Q exists | ADR-0003 |
 | `grounded-claims` | Mode | Shipped, plugin-local (`skills/grounded-claims`) | ADR-0002 |
 | `caveman` | Mode | External skill; not in plugin | global `~/.claude/skills/caveman` |
