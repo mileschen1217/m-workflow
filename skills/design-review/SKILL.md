@@ -105,14 +105,21 @@ Skill(skill: "m-workflow:cross-provider-reviewer", args: {
 > 6. Risks / Open Questions are not hidden
 > 7. Verification Strategy declaration (evidence-honesty gate, Stage 0 — no test
 >    source exists yet, so this is a DECLARATION check, never a coverage read):
->    the spec has a non-empty `## Verification Strategy` section. A
->    **boundary-crossing** AC is one whose Given/When/Then asserts a behaviour at
->    a boundary the code does not own — a process boundary, a network/API call, a
->    DB or filesystem write, device I/O, a real `Agent()`/sub-process dispatch, or
->    a deployed/wired target environment (boundary TYPES, not a closed keyword
->    list — match on behaviour, not wording). Every boundary-crossing AC id must
->    appear in the section's `Live-bearing AC IDs`. If it is ambiguous whether an
->    AC crosses such a boundary, treat it as live-bearing (default stricter).
+>    the spec has a non-empty `## Verification Strategy` section. **Predicate
+>    (primary):** a **live-bearing** AC is one whose Given/When/Then asserts a
+>    behaviour that **cannot be discharged offline** — it depends on an un-owned,
+>    wired, deployed, real-scale, or otherwise non-offline-dischargeable boundary.
+>    The TYPES that typically signal this — a network/API call, a DB or filesystem
+>    write, device I/O, a real `Agent()`/sub-process dispatch, a deployed/wired
+>    target — count as live-bearing ONLY when they satisfy that predicate (match on
+>    behaviour, not wording; not a closed keyword list). **Ownership
+>    counter-example:** invoking the project's OWN deterministic in-repo script/CLI,
+>    or a test writing to its own temp fixture dir, is owned + offline +
+>    deterministic → NOT live-bearing, even though it spawns a process or touches
+>    the filesystem. (A non-deterministic in-repo script — e.g. one making a real
+>    network call — is NOT exempt: apply the predicate.) Every live-bearing AC id
+>    must appear in the section's `Live-bearing AC IDs`. If ambiguous, treat it as
+>    live-bearing (default stricter).
 >    Surface a missing/empty section or an omitted live-bearing AC as a finding.
 >    Spec-internal judgment only — do NOT read test source or judge per-AC
 >    coverage (those belong to code-review batch / epic-close).
