@@ -50,18 +50,17 @@ project already made.
 
 ### (4b) Three-way division of labour
 
-- The **live artifact** (物證) is produced by a **producer** before the gate — a
-  perf script invoking the real code, a hook firing in a real install/session, or a
-  build LLM session dispatching `Agent()`. The producer varies by the live dim.
-- The **deterministic structural floor** (`scripts/check-spec-floor.sh`) checks only
-  that the artifact exists and is referenced by its AC. It never judges authenticity.
-- The **fresh-context reviewer** (the judge) authenticates the artifact as a real
-  run against current code — not hand-pasted, not a static proxy.
+The decision recorded here is the **split of responsibility** for a live artifact
+across three roles: the **producer** makes it, the **deterministic structural floor**
+(`scripts/check-spec-floor.sh`) checks only that it exists and is referenced by its
+AC, and the **fresh-context reviewer** authenticates it. The standing constraint is
+**producer ≠ judge** — the builder ≠ reviewer discipline applied at the live-artifact
+layer.
 
-**Producer ≠ judge:** the producer may be a build session, but never the reviewer
-that authenticates the artifact — the existing builder ≠ reviewer discipline applied
-at the live-artifact layer. Authentication burden scales with how fakeable the
-producer is.
+What each of `producer`, `live artifact`, and `provenance` *means* (and the
+fakeability-scaling rule, and the floor-checks-existence-not-authenticity split) is
+defined in `CONTEXT.md § Verification vocabulary` — this ADR records the division
+decision, not the definitions.
 
 ### (4c) Motivated by the three AOS live dims
 
@@ -72,11 +71,13 @@ Phase-1 contract alone because each needs a live artifact, not in-repo test sour
 
 ## Deliberate scope choice (over-spec guard)
 
-Provenance is "producer identity + freshness", authenticated by a human-in-the-loop
-reviewer at close — NOT a cryptographic signing / attestation engine. For a markdown
-plugin whose close runs once per epic with a human in the loop, a signing mechanism
-would be over-engineering (the same guard ADR-0009 applied to the `[unverified]`
-waiver). This is an intentional simplicity decision, not an omission.
+The decision: live-artifact provenance is authenticated by a human-in-the-loop
+reviewer at close — we deliberately do NOT add a cryptographic signing / attestation
+engine. For a markdown plugin whose close runs once per epic with a human in the
+loop, a signing mechanism would be over-engineering (the same guard ADR-0009 applied
+to the `[unverified]` waiver). This is an intentional simplicity decision, not an
+omission. (What provenance consists of is defined in `CONTEXT.md § Verification
+vocabulary`, not restated here.)
 
 ## Consequences
 

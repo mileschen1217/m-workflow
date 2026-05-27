@@ -111,7 +111,7 @@ and the testing-strategy spec Interfaces §5.
 
 3. **Build the reckoning table** (one row per AC across the epic's accepted specs):
 
-   | AC | Covered by (test ref, derived at close) | [unverified: reason] | live-bearing? | waiver | Issue |
+   | AC | Covered by (evidence ref, derived at close) | [unverified: reason] | live-bearing? | waiver | Issue |
    |----|----------------------------------------|----------------------|---------------|--------|-------|
 
    - "Covered by" = the evidence the reviewer found asserting the AC; blank ⇒ no
