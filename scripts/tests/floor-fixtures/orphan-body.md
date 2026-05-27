@@ -3,6 +3,8 @@ type: spec
 status: Accepted
 ---
 # Orphan-body fixture
+## Acceptance Criteria
+
 ### Index
 | AC | Name |
 |---|---|

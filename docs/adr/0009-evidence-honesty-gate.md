@@ -1,7 +1,7 @@
 ---
 kind: workflow
 adr_id: 0009
-status: Proposed
+status: Accepted
 date: 2026-05-27
 ---
 
@@ -9,12 +9,13 @@ date: 2026-05-27
 
 ## Status
 
-Proposed. Records the committed design decision for `testing-strategy` Phase 1
+Accepted. Records the committed design decision for `testing-strategy` Phase 1
 (spec `.swarm/specs/2026-05-26-testing-strategy-phase1-design.md`, `status: Accepted`,
-design-review gate cleared at C+H=0 over three cross-provider passes). Flips to
-Accepted when P1 ships (the 9 files in the spec's § Scope). The decision below is
-firm regardless of build order; the status only tracks shipped-ness, per the
-honesty bedrock this ADR itself encodes.
+design-review gate cleared at C+H=0). P1 shipped 2026-05-27 — all 11 ACs
+implemented and committed on the worktree branch (the 9 files in the spec's
+§ Scope; ADR-0009 + CONTEXT.md vocab were the two pre-done). The decision below is
+firm regardless of build order; the status tracks shipped-ness, per the honesty
+bedrock this ADR itself encodes.
 
 ## Triggered by
 

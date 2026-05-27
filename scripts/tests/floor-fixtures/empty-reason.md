@@ -3,6 +3,8 @@ type: spec
 status: Accepted
 ---
 # Empty-reason fixture
+## Acceptance Criteria
+
 ### Index
 | AC | Name |
 |---|---|

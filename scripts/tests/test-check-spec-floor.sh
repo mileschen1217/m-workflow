@@ -29,5 +29,6 @@ assert no-table     1 "no AC table"       no-table.md
 assert draft        0 "skipped: draft"    draft.md
 assert dup-index    1 "AC-2"              dup-index.md
 assert dup-body     1 "AC-1"              dup-body.md
+assert noise        0 "pass"              noise.md
 
 if [ "$fail" -eq 0 ]; then echo "ALL GREEN"; exit 0; else echo "RED: $fail failed"; exit 1; fi

@@ -3,6 +3,8 @@ type: spec
 status: Accepted
 ---
 # Dup-index fixture
+## Acceptance Criteria
+
 ### Index
 | AC | Name |
 |---|---|

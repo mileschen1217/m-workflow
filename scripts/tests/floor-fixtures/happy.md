@@ -3,6 +3,8 @@ type: spec
 status: Accepted
 ---
 # Happy fixture
+## Acceptance Criteria
+
 ### Index
 | AC | Name |
 |---|---|

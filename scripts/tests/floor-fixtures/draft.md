@@ -3,6 +3,8 @@ type: spec
 status: draft
 ---
 # Draft fixture
+## Acceptance Criteria
+
 ### Index
 | AC | Name |
 |---|---|

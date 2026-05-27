@@ -3,6 +3,8 @@ type: spec
 status: Accepted
 ---
 # Dup-body fixture
+## Acceptance Criteria
+
 ### Index
 | AC | Name |
 |---|---|
