@@ -101,6 +101,23 @@ Then <observable outcome>
   > Live-bearing = the AC's real behaviour cannot be discharged offline (un-owned
   > process / real-scale / wired / deployed target). Invoking your OWN deterministic
   > in-repo script in a test is owned + offline → NOT live-bearing.
+  >
+  > For each live-bearing AC the evidence is a **live artifact** — captured output of
+  > actually exercising the behaviour against the real boundary, NOT a static proxy
+  > (grep / mock / env-faked condition / deployed-file read). It must carry
+  > **provenance**: (1) which producer/invocation made it (re-runnable or
+  > identifiable) + (2) freshness (commit/timestamp). **Producer ≠ judge:** the
+  > artifact is produced before the gate by a script/session/build run — never by
+  > the fresh-context reviewer that authenticates it. Authentication burden scales
+  > with fakeability (a hand-pasteable perf log = high; a self-attesting `Agent()`
+  > transcript = lower). The deterministic floor checks only that the artifact
+  > exists and is referenced by its AC; the reviewer authenticates it.
+  >
+  > Producer → live-artifact examples (domain-neutral):
+  > a real-device run → serial log / scope capture;
+  > a headless browser vs a real build → screenshot / DOM snapshot;
+  > a perf script → timing log;
+  > a build session dispatching `Agent()` → subagent transcript.
 
 ## Architecture
 

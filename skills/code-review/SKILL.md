@@ -112,6 +112,25 @@ Provenance (schema, the 5 operations, both banner formats) is defined solely in
    > NOT discharge that claim (proxy, not coverage). Emit `[unverified: reason]` for
    > any AC you cannot confirm — never pass by default. `[unverified]` is honest and
    > allowed (informed-consent); surface findings, do not force passing.
+   >
+   > **Live-bearing ACs (an extra demand, Phase 2).** For each AC listed in the
+   > governing spec's `Live-bearing AC IDs`: the evidence is a **live artifact** —
+   > captured output of actually exercising the behaviour against the real boundary.
+   > A static proxy (grep / mock / env-faked condition / deployed-file read) does
+   > NOT satisfy a live-bearing AC; if only a static proxy is offered, flag it (same
+   > block semantics as silent false-green — it may not be claimed done). The
+   > artifact must carry **provenance**: (1) which producer/invocation made it
+   > (re-runnable command or identifiable session) and (2) freshness
+   > (commit/timestamp tying it to current code). Authentication burden scales
+   > with fakeability: a hand-pasteable perf log demands strong provenance
+   > (re-runnable command + real-scale fixture reference + freshness); a real
+   > `Agent()` transcript is largely self-attesting and demands less. You
+   > authenticate the artifact — you do not re-run the producer
+   > (**producer ≠ judge**: the artifact is produced by a script/session/build run,
+   > never by you the reviewer; this is the existing builder ≠ reviewer discipline).
+   > Do NOT
+   > require cryptographic signing of artifacts (over-spec — a human is in the loop
+   > at close).
 5. Single reviewer; no parallel dispatch in Pattern B.
    **Normative fallback (M3):** if the swapped reviewer (e.g. `m-workflow:codex-reviewer`)
    returns `status: failed` / a `fallback_reason` (codex unavailable), fall back to the

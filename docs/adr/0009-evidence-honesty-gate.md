@@ -9,9 +9,10 @@ date: 2026-05-27
 
 ## Status
 
-Accepted. Records the committed design decision for `testing-strategy` Phase 1
-(spec `.swarm/specs/2026-05-26-testing-strategy-phase1-design.md`, `status: Accepted`,
-design-review gate cleared at C+H=0). P1 shipped 2026-05-27 — all 11 ACs
+Accepted. Records the committed design decision for the `testing-strategy` Phase 1
+design spec (an in-flight artifact kept local per this repo's local-only spec
+convention — not a tracked path; `status: Accepted`, design-review gate cleared at
+C+H=0). P1 shipped 2026-05-27 — all 11 ACs
 implemented and committed on the worktree branch (the 9 files in the spec's
 § Scope; ADR-0009 + CONTEXT.md vocab were the two pre-done). The decision below is
 firm regardless of build order; the status tracks shipped-ness, per the honesty
@@ -19,7 +20,8 @@ bedrock this ADR itself encodes.
 
 ## Triggered by
 
-`/m-workflow:design-spec` (`.swarm/specs/2026-05-26-testing-strategy-phase1-design.md`).
+Authored during the `/m-workflow:design-spec` run for Phase 1 (ADR genesis; the spec
+is a local in-flight artifact, not a tracked path).
 
 ## Related ADRs
 
@@ -108,8 +110,8 @@ that AC's Then-clause. Consequences of this choice, each committed here:
 
 ### (2d) Grounded in traceability research
 
-This is not an aesthetic preference. `.swarm/research/2026-05-27-requirement-traceability-research.md`
-records the grounding:
+This is not an aesthetic preference. The requirement-traceability research note (a
+local in-flight artifact) records the grounding:
 
 - **RTM rot** — requirement-traceability matrices consume 15–30% of effort and run
   ~40% stale; a stale mapping is *worse* than none because it claims coverage that
@@ -181,10 +183,10 @@ memory `markdown-plugin-no-statemachine-overspec`).
 
 ## Related
 
-- `.swarm/specs/2026-05-26-testing-strategy-phase1-design.md` — the spec this ADR
-  records (AC-2 names this ADR as a deliverable).
-- `.swarm/research/2026-05-27-requirement-traceability-research.md` — RTM rot, Adzic
-  SBE 10-year, LLM-as-judge; grounds B over A.
+- The `testing-strategy` Phase 1 design spec (local in-flight artifact, not a tracked
+  path) — the spec this ADR records (its AC-2 names this ADR as a deliverable).
+- The requirement-traceability research note (local) — RTM rot, Adzic SBE 10-year,
+  LLM-as-judge; grounds B over A.
 - `CONTEXT.md` § Verification vocabulary — the settled glossary (this ADR points at
   it for term definitions, does not restate them).
 - `docs/evidence-honesty.md` — the committed philosophy doc (states the principle;
