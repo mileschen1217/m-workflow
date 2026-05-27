@@ -37,3 +37,16 @@ Each of those behaviours is falsifiable by grep against the shipped SKILL.md pro
 (see the keystone decision in `docs/adr/0009-evidence-honesty-gate.md`). A
 deterministic structural-floor checker (`scripts/check-spec-floor.sh`) guards the
 standing spec state — every AC enumerable, every `[unverified]` justified.
+
+## Live-bearing claims (the live boundary)
+
+Some claims cross a **live boundary** — a real device, a network/DB call, a real
+browser render, a real `Agent()` dispatch, real-scale perf. These cannot be
+discharged offline. A live-bearing AC requires a **live artifact** (the captured
+output of actually exercising the behaviour against the real boundary, never a
+static proxy or mock) carrying **provenance** (which producer made it + freshness),
+which a fresh-context reviewer authenticates at `code-review batch` and epic-close.
+The producer is never the reviewer (producer ≠ judge). For the term definitions see
+`CONTEXT.md § Verification vocabulary`; for the contract-only-not-skill decision and
+the three-way division of labour see `docs/adr/0010-live-bearing-ac-contract.md` —
+this doc states the stance and points at those, it does not restate them.
