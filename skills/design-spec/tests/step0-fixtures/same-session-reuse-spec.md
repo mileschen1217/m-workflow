@@ -1,6 +1,6 @@
 # Fixture: same-session-reuse-spec — AC-10 (Same-invocation reuse, design-spec; fresh invocation)
 # Harness contract: skills/<skill>/tests/step0-fixtures/ two-layer schema
-# Spec authority: .swarm/specs/2026-05-22-intention-first-baseline.md § AC-10
+# Spec authority: intention-first epic § AC-10
 #
 # design-spec; a parent epic foundation is present, but this is a FRESH
 # invocation — session-state false. Reuse is same-invocation only; a fresh

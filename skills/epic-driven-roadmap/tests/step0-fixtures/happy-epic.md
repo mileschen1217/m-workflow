@@ -1,6 +1,6 @@
 # Fixture: happy-epic — AC-1 (Elicitation happy path, epic scaffold)
 # Harness contract: skills/<skill>/tests/step0-fixtures/ two-layer schema
-# Spec authority: .swarm/specs/2026-05-22-intention-first-baseline.md § AC-1
+# Spec authority: intention-first epic § AC-1
 
 ```yaml
 invocation: { skill: epic-driven-roadmap, args: "" }

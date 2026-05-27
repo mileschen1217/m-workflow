@@ -1,6 +1,6 @@
 # Fixture: vague-aim — AC-8 (Synthesised aim must not carry a vague token)
 # Harness contract: skills/<skill>/tests/step0-fixtures/ two-layer schema
-# Spec authority: .swarm/specs/2026-05-22-intention-first-baseline.md § AC-8
+# Spec authority: intention-first epic § AC-8
 #
 # Table-driven via `cases` (7 entries). Each case: user-stated vague aim, the
 # fixed observable rewrite to confirm, and the token that must be absent FROM

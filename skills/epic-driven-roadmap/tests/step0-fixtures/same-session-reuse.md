@@ -1,6 +1,6 @@
 # Fixture: same-session-reuse — AC-10 (Same-invocation reuse, not re-elicitation; epic)
 # Harness contract: skills/<skill>/tests/step0-fixtures/ two-layer schema
-# Spec authority: .swarm/specs/2026-05-22-intention-first-baseline.md § AC-10
+# Spec authority: intention-first epic § AC-10
 
 ```yaml
 invocation: { skill: epic-driven-roadmap, args: "" }

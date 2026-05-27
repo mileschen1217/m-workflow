@@ -1,6 +1,6 @@
 # Fixture: bypass-yaml-no-intention-first — AC-7 (Baseline always-on: Step 0 reached when yaml present but adopted_disciplines empty)
 # Harness contract: skills/<skill>/tests/step0-fixtures/ two-layer schema
-# Spec authority: .swarm/specs/2026-05-22-intention-first-baseline.md § AC-7
+# Spec authority: intention-first epic § AC-7
 #
 # .claude/m-workflow.yaml is present but adopted_disciplines is empty
 # (intention-first not listed); must NOT skip Step 0.

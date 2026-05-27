@@ -1,6 +1,6 @@
 # Fixture: empty-out-of-scope — AC-9 (Out-of-scope sentinel on decline)
 # Harness contract: skills/<skill>/tests/step0-fixtures/ two-layer schema
-# Spec authority: .swarm/specs/2026-05-22-intention-first-baseline.md § AC-9
+# Spec authority: intention-first epic § AC-9
 
 ```yaml
 invocation: { skill: epic-driven-roadmap, args: "" }

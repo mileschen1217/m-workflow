@@ -1,6 +1,6 @@
 # Fixture: scope-reframe — AC-12 (Scope reframe creates no spec file)
 # Harness contract: skills/<skill>/tests/step0-fixtures/ two-layer schema
-# Spec authority: .swarm/specs/2026-05-22-intention-first-baseline.md § AC-12
+# Spec authority: intention-first epic § AC-12
 #
 # During sharpening the user reframes the work to a fixture / spike / config
 # knob / workaround. This is the motivating failure mode.

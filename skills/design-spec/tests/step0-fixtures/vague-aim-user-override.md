@@ -1,6 +1,6 @@
 # Fixture: vague-aim-user-override — AC-8b (User-confirmed vague-aim override)
 # Harness contract: skills/<skill>/tests/step0-fixtures/ two-layer schema
-# Spec authority: .swarm/specs/2026-05-22-intention-first-baseline.md § AC-8b
+# Spec authority: intention-first epic § AC-8b
 #
 # After synthesis, the user edits the aim to reintroduce a vague token.
 

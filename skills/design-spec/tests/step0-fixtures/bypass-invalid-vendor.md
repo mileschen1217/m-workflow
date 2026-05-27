@@ -1,6 +1,6 @@
 # Fixture: bypass-invalid-vendor — AC-7 negative (Parse error: "with llama" is an invalid vendor)
 # Harness contract: skills/<skill>/tests/step0-fixtures/ two-layer schema
-# Spec authority: .swarm/specs/2026-05-22-intention-first-baseline.md § AC-7
+# Spec authority: intention-first epic § AC-7
 #
 # "with llama" is a pre-Draft validation failure: the vendor is not in the
 # supported set. This is a parse-error path, NOT one of the five reachability

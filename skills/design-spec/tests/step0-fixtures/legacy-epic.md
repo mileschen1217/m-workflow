@@ -1,6 +1,6 @@
 # Fixture: legacy-epic — AC-14 (Legacy parent epic falls through to full elicitation)
 # Harness contract: skills/<skill>/tests/step0-fixtures/ two-layer schema
-# Spec authority: .swarm/specs/2026-05-22-intention-first-baseline.md § AC-14
+# Spec authority: intention-first epic § AC-14
 #
 # design-spec invoked within an epic whose index.md predates this build
 # (carries a legacy ## Intention block, NOT a ## Foundation section).

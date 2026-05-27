@@ -1,6 +1,6 @@
 # Fixture: design-slide-attempt — AC-3 (Shallow boundary: gate does not slide into design)
 # Harness contract: skills/<skill>/tests/step0-fixtures/ two-layer schema
-# Spec authority: .swarm/specs/2026-05-22-intention-first-baseline.md § AC-3, § Interfaces "AC-3 forbidden regex families"
+# Spec authority: intention-first epic § AC-3, § Interfaces "AC-3 forbidden regex families"
 #
 # User turns include: "which package?", "what endpoint contract?",
 # "what migration path?", "how should we build it?"

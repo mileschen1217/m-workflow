@@ -1,6 +1,6 @@
 # Fixture: aim-handoff — AC-13 (Provisional aim handed off to AC-authoring for confirmation)
 # Harness contract: skills/<skill>/tests/step0-fixtures/ two-layer schema
-# Spec authority: .swarm/specs/2026-05-22-intention-first-baseline.md § AC-13
+# Spec authority: intention-first epic § AC-13
 #
 # SOLE FIXTURE EXEMPT from the harness-wide premature-hand-off guard.
 # This fixture intentionally scripts the session THROUGH Step 0 and INTO

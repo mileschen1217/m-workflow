@@ -1,6 +1,6 @@
 # Fixture: happy-spec — AC-2 (Elicitation happy path, design spec) + AC-5 (no within-doc duplication)
 # Harness contract: skills/<skill>/tests/step0-fixtures/ two-layer schema
-# Spec authority: .swarm/specs/2026-05-22-intention-first-baseline.md § AC-2, AC-5
+# Spec authority: intention-first epic § AC-2, AC-5
 
 ```yaml
 invocation: { skill: design-spec, args: "" }
