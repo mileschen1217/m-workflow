@@ -109,6 +109,20 @@ and the testing-strategy spec Interfaces §5.
    > any AC you cannot confirm — never pass by default. `[unverified]` is honest and
    > allowed (informed-consent); surface findings, do not force passing.
 
+2b. **Ground every coverage judgment (`source-as-truth` + `grounded-claims`).** The
+   evidence the reviewer reads is the **committed artifact** the AC asserts about —
+   that file is the truth (source-as-truth), NOT the plan / test assertion that points
+   at it. Apply `grounded-claims` to each "Covered by" judgment: cite the artifact
+   freshly — `(via: read → <file>:<line>: <asserted content present>)`. A plan / test
+   assertion (a grep, a bats line) is itself a claim to be **re-grounded**, never a
+   citation; if its target text has diverged from the artifact — re-running the check
+   fails — the coverage claim is **ungrounded → `[unverified]`** (or fix the assertion).
+   For a markdown plugin with no compiled tests this defines the test source: the
+   executable assertion AND the committed artifact it targets — and the
+   **committed artifact is authoritative** over the assertion. (This is the dogfood
+   lesson — a stale grep was caught only by opening the artifact, never by trusting
+   the assertion text.)
+
 3. **Build the reckoning table** (one row per AC across the epic's accepted specs):
 
    | AC | Covered by (test / live-artifact ref — verification evidence, derived at close) | [unverified: reason] | live-bearing? | waiver | Issue |
