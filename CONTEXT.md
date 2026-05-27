@@ -61,11 +61,24 @@ The live set of role-instances. Single source of truth — ADRs classify; this t
 
 `grounded-claims` was formerly named `ground-as-source`; renamed to disambiguate from the `source-as-truth` Discipline (they govern different relationships — doc↔source vs claim↔evidence; see ADR-0002).
 
-`grounded-claims` and the in-flight `testing-strategy` honesty gate share one spine (claim ≤ evidence) on different surfaces: `grounded-claims` governs **narration** (every sentence a session SAYS must cite or carry `[假設]`); `testing-strategy` governs **deliverable certification** (every AC the workflow marks done must be backed by a test at the right layer, or carry `[unverified]`). Siblings, not duplicates — narration-time vs gate-time.
+`grounded-claims` and the `testing-strategy` honesty gate are two instances of the **honesty spine** (§ Honesty spine) on different surfaces: `grounded-claims` governs **narration** (every sentence a session SAYS must cite or carry `[假設]`); `testing-strategy` governs **deliverable certification** (every AC the workflow marks done must be backed by a test at the right layer, or carry `[unverified]`). Siblings, not duplicates — narration-time vs gate-time.
 
 ### Fire ordering (when multiple fire at one Step)
 
 When several baselines/disciplines/modes are active at the same skill Step, scope-framing fires before content-rules: **`intention-first` (Baseline) → `source-as-truth` (Discipline) → active Modes**. Rationale: the intention gate can reframe scope ("this is a fixture, not a spec") and abort the Step; running it first avoids wasted vocabulary-load cost.
+
+## Honesty spine
+
+Constitution. The load-bearing principle of the plugin: **a claim never exceeds its evidence; gaps are marked, not hidden** (`claim ≤ evidence`). Every stage is accountable to this spine — it is the thread the whole workflow exists to keep honest.
+
+The spine reaches a stage through **two arms**:
+
+- **Feedforward arm (anticipatory)** — *before* the work, the stage declares what it will claim and what evidence that claim needs, and marks unknowns as unknown. E.g. `design-spec` declares the Verification Strategy; `design-review` forces `[unverified]` on ambiguous live-bearing ACs.
+- **Feedback arm (verifying)** — *after* the work, a mechanism measures whether the claim was actually backed and forces any gap to be marked. E.g. epic-close evidence reckoning; the `code-review batch` evidence-honesty criteria; `grounded-claims` per-sentence `[假設]` / citation.
+
+**Not a fifth role.** The spine is content carried *through* the four roles, not an activation scope of its own: `grounded-claims` (Mode) carries it for narration, the `testing-strategy` gate for deliverable certification, `source-as-truth` (Discipline) for doc↔source. The roles say *when* a rule fires; the spine says *what truthfulness* the rule serves.
+
+**Audit criterion — not a completeness checklist.** A stage need not have both arms. The defect is **silent false-green**: a claim that exceeds its evidence and is caught by no mechanism, in that stage or downstream. A one-armed (or armless) stage is fine when it makes sense — it is a gap only when it emits a claim that nothing ever closes. Feedforward⇄feedback began as a general control-axis diagnostic (is the suite FF-heavy or FB-heavy?); that broader audit was dropped — honesty is that axis landed, so the two arms are retained only as the spine's structure, not as a separate lens. (Origin: the `workflow-suite-audit` epic.)
 
 ## Four doc kinds
 
