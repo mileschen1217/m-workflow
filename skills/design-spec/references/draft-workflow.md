@@ -19,6 +19,9 @@ If not provided in the invocation:
    guidance. Do not skip Foundation, Acceptance Criteria, Error Handling, or
    Invariants — Foundation locks scope; the other three feed the ATDD+TDD
    double loop. All four are mandatory.
+   Also draft the ## Verification Strategy section (coarse, risk-scaled) — state the
+   risk layers, power-on-ability, live means, and the Live-bearing AC IDs list. It is
+   mandatory for a full spec (the skip-spec path is exempt — see SKILL.md Skip when).
 
 When drafting ## Acceptance Criteria:
 - Treat Foundation.aim as a provisional DIRECTION (set shallow at Step 0,
@@ -37,8 +40,11 @@ When drafting ## Acceptance Criteria:
 - Every AC must appear in the `### Index` table with a stable `AC-N` id and
   have a matching `### AC-N — <name>` block below it (1:1 — every index row
   has a block, every block has a row). Assign N 1-based at draft; never reuse
-  within a spec. Leave the `Test` column `_(filled when test lands)_`; it is
-  populated at Stage-5 ATDD.
+  within a spec. The index has NO Test column and no per-AC red/green state —
+  coverage is derived each review pass by the reviewer reading test source. The
+  only authored per-AC marker is an inline `[unverified: <reason>]` (reason
+  mandatory; a live-bearing AC may not carry it). See
+  `docs/adr/0009-evidence-honesty-gate.md`.
 
 ### Line-width policy (mandatory)
 

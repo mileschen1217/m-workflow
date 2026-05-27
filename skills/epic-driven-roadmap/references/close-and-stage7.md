@@ -4,6 +4,9 @@
 2. Set frontmatter `status: done`, `landed: YYYY-MM-DD`.
 3. Fill the Retrospective block — bullets only; typical: What worked, What pivoted, What to do differently.
 4. Run **Stage 7 — Doc Reckoning** (see below) and append the block to the epic index.
+4b. Run **Evidence Reckoning** (BLOCKING — distinct from, and does not weaken, the
+    advisory Stage 7 above). See § Evidence Reckoning below. Close cannot complete
+    until the reckoning table is built and every blocking rule is satisfied.
 5. Remove the row from ROADMAP § Active Epics; add to § Completed Epics with the landed date.
 6. Commit.
 
@@ -77,3 +80,53 @@ Mechanical inventory of what this epic did to the doc graph. Lists facts; does n
 - Not a judge of bridge rung (rung 2 vs rung 4). Author's call.
 - Not a judge of whether the deposit's lever choice was right. Author's call.
 - Not a gate. Findings are advisory; the epic may close with bridge docs missing `kill-on:` if the human accepts the residual.
+
+## Evidence Reckoning (BLOCKING — runs at close, before Commit)
+
+A distinct close step from the advisory Stage 7 doc-reckoning. It produces a
+per-AC accounting host authored ONCE at close by reading source (so it cannot rot
+like a maintained mapping). See `docs/adr/0009-evidence-honesty-gate.md` decision 2c
+and the testing-strategy spec Interfaces §5.
+
+**Procedure**
+
+1. **Structural floor first.** For each `status: Accepted` spec of this epic, run
+   `scripts/check-spec-floor.sh <spec-path>`. Any non-zero exit BLOCKS close — fix
+   the spec (un-enumerable AC set, duplicate AC id, or an empty `[unverified]`
+   reason) before continuing. This is the deterministic gate; coverage judgment is
+   the reviewer's.
+
+2. **Derive coverage.** Apply the evidence-honesty (coverage) criteria — the SAME
+   criteria as `skills/code-review/SKILL.md` batch, **inlined here** so it is
+   greppable in this host too (AC-5: criteria present at BOTH batch AND epic-close):
+
+   > Read the governing spec's ACs and the test source. For each AC, judge whether a
+   > test asserts that AC's Then-clause (AC coverage, semantic — not code-coverage %,
+   > not tool-measured). If an AC is claimed done but no test in source asserts it and
+   > it carries no `[unverified]` → report **silent false-green** (blocks the done
+   > claim). A test that mocks the very boundary a boundary-crossing AC claims does
+   > NOT discharge that claim (proxy, not coverage). Emit `[unverified: reason]` for
+   > any AC you cannot confirm — never pass by default. `[unverified]` is honest and
+   > allowed (informed-consent); surface findings, do not force passing.
+
+3. **Build the reckoning table** (one row per AC across the epic's accepted specs):
+
+   | AC | Covered by (test ref, derived at close) | [unverified: reason] | live-bearing? | waiver | Issue |
+   |----|----------------------------------------|----------------------|---------------|--------|-------|
+
+   - "Covered by" = the test the reviewer found asserting the AC; blank ⇒ no coverage found.
+   - "live-bearing?" = "yes" if the AC is listed in its spec's Verification Strategy `Live-bearing AC IDs`.
+   - "waiver" = a human, at close, writes a rationale to consciously proceed past a NON-LIVE gap.
+   - "Issue" = the filed/linked debt issue for each `[unverified]` / waiver row.
+
+4. **Apply the blocking rules:**
+   - A non-live-bearing row with no "Covered by", no `[unverified]`, and no waiver ⇒ **BLOCKS close**.
+   - A live-bearing row closes ONLY with a cited "Covered by" live evidence — it
+     may NOT use `[unverified]` AND may NOT be waived. An uncovered live-bearing AC ⇒
+     **BLOCKS close** (the only honest P1 close is to defer the whole AC to Phase 2).
+   - An `[unverified]` or waiver row with an empty Issue cell ⇒ **BLOCKS close** until a debt issue is filed/linked.
+   - An un-reckoned AC (no row) ⇒ **BLOCKS close**.
+
+5. **Record** the completed table in the epic-close block of the epic `index.md`.
+
+A healthy close has an empty `[unverified]` set.

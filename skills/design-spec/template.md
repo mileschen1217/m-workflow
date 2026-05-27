@@ -67,13 +67,15 @@ What hurts today? Concrete, scoped, falsifiable. State the user or system pain w
 
 Given/When/Then scenarios — the **outer ATDD loop's contract**. Cover happy path, error paths, boundary values. Non-negotiable: every error path and boundary named here must correspond to at least one acceptance test scenario.
 
-Every AC carries a stable `AC-N` id (1-based, assigned at draft, never reused within a spec) and appears both in the index table and as a `### AC-N` block. The `Test` column is `_(filled when test lands)_` at draft time and is populated at Stage-5 ATDD with a test reference or grep command (this realises the CLAUDE.md spec↔test bidirectional cross-reference).
+The verification layer/mechanism never appears in an AC's Name or Given-When-Then — coverage is derived and `[unverified]` is the only authored marker (no implementation leakage into the contract).
+
+Every AC carries a stable `AC-N` id (1-based, assigned at draft, never reused within a spec) and appears both in the index table and as a `### AC-N` block. **No stored AC→test mapping and no per-AC red/green state is kept** — coverage is DERIVED each review pass by the reviewer reading test source (see `docs/adr/0009-evidence-honesty-gate.md`, decision 2c). The ONLY authored per-AC marker is an inline `[unverified: <reason>]` line under an AC's Given/When/Then, with a mandatory non-empty reason; a live-bearing AC (one listed in Verification Strategy) may NOT carry it.
 
 ### Index
 
-| AC | Name | Test |
-|---|---|---|
-| AC-1 | <short-name> | _(filled when test lands)_ |
+| AC | Name |
+|---|---|
+| AC-1 | <short-name> |
 
 ---
 
@@ -84,6 +86,18 @@ Given <context>
 When <action>
 Then <observable outcome>
 ```
+
+## Verification Strategy
+
+> Coarse, risk-scaled — NOT per-AC. ~4–7 lines. States which risk layers this
+> feature needs and which ACs carry live evidence. Read at design-review (presence
+> + live-bearing coherence) and at epic-close (the live-bearing list gates which
+> ACs may NOT be carried as `[unverified]`). See `docs/adr/0009-evidence-honesty-gate.md`.
+
+- **Risk layers this feature needs:** <unit? integration? contract? e2e? live? perf?>
+- **Power-on-able?** <can the design be exercised at the needed layer; if not, why / what's needed>
+- **Live means required:** <fixture / target / device / none>
+- **Live-bearing AC IDs:** <AC-N, AC-M | none>   ← these may NOT be carried as `[unverified]`
 
 ## Architecture
 

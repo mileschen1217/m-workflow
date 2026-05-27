@@ -65,6 +65,17 @@ Provenance (schema, the 5 operations, both banner formats) is defined solely in
 1. Resolve the commit range:
    - `/m-workflow:code-review batch <range>` → use `<range>`
    - `/m-workflow:code-review batch` → default `$(git merge-base HEAD main)..HEAD` (or `master`; project CLAUDE.md may override)
+1b. Locate the governing spec deterministically (for the evidence-honesty criteria
+   in Step 4). **Which epic is "in scope":** resolve it from `m-workflow.yaml`
+   `epics_dir` + the active epic (the epic whose branch/range is being reviewed), OR
+   take it from the `epic` / `governing_specs` field the orchestrator passed in the
+   reviewer envelope. If neither is resolvable from the diff context, take the skip
+   path immediately. Otherwise read that epic index and enumerate its
+   `status: Accepted` specs (paths under `specs_dir`). If there is no epic index in
+   scope, or no Accepted spec, SKIP the evidence-honesty criteria and emit exactly
+   one line — `no governing spec — coverage not audited` — never silently pass.
+   Otherwise carry the Accepted spec path(s) into the reviewer envelope as
+   `governing_specs`.
 2. Detect builder (ALWAYS run — the E14 envelope needs `builder_vendor` even under
    `force_reviewer`; force waives only the reviewer swap in Step 3 and the
    vendor-correctness requirement, NOT builder detection):
@@ -87,6 +98,20 @@ Provenance (schema, the 5 operations, both banner formats) is defined solely in
 4. Dispatch the resolved reviewer:
    - `codex-reviewer` → `Agent(subagent_type: "m-workflow:codex-reviewer", description: "Codex batch review", prompt: { task: <full diff>, role: "batch-reviewer", task_dir: <optional> })`
    - `everything-claude-code:code-reviewer` → corresponding Agent dispatch  <!-- # EXTERNAL DEP — everything-claude-code (Epic B vendors this) -->
+
+   When `governing_specs` is non-empty (from Step 1b), prepend the following
+   **evidence-honesty (coverage) criteria** to the reviewer's task prompt (these fire
+   ONLY here at `batch` / epic-close, where test source exists — never at
+   design-review, never in the per-language reviewers, never on arbitrary diffs):
+
+   > Read the governing spec's ACs and the test source. For each AC, judge whether a
+   > test asserts that AC's Then-clause (AC coverage, semantic — not code-coverage %,
+   > not tool-measured). If an AC is claimed done but no test in source asserts it and
+   > it carries no `[unverified]` → report **silent false-green** (blocks the done
+   > claim). A test that mocks the very boundary a boundary-crossing AC claims does
+   > NOT discharge that claim (proxy, not coverage). Emit `[unverified: reason]` for
+   > any AC you cannot confirm — never pass by default. `[unverified]` is honest and
+   > allowed (informed-consent); surface findings, do not force passing.
 5. Single reviewer; no parallel dispatch in Pattern B.
    **Normative fallback (M3):** if the swapped reviewer (e.g. `m-workflow:codex-reviewer`)
    returns `status: failed` / a `fallback_reason` (codex unavailable), fall back to the

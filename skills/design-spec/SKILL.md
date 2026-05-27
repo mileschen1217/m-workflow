@@ -39,6 +39,11 @@ Skip when:
 - Touches one module, preserves existing contracts
 - Follows a pattern already specified elsewhere in the codebase
 
+When a feature qualifies for skip (single-file / one-module / pattern-following),
+NO Verification Strategy section is authored — there is no lighter PR-one-liner form
+in Phase 1 (deferred to a later phase). The evidence-honesty contract attaches to
+full specs only.
+
 Naturally chained with exploration (Topic 2 routing) on the input side and
 `/superpowers:writing-plans` on the output side:
 

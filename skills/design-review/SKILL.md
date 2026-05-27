@@ -103,6 +103,19 @@ Skill(skill: "m-workflow:cross-provider-reviewer", args: {
 > 4. Error Handling rows map to scenarios
 > 5. Invariants are cross-cutting rules
 > 6. Risks / Open Questions are not hidden
+> 7. Verification Strategy declaration (evidence-honesty gate, Stage 0 — no test
+>    source exists yet, so this is a DECLARATION check, never a coverage read):
+>    the spec has a non-empty `## Verification Strategy` section. A
+>    **boundary-crossing** AC is one whose Given/When/Then asserts a behaviour at
+>    a boundary the code does not own — a process boundary, a network/API call, a
+>    DB or filesystem write, device I/O, a real `Agent()`/sub-process dispatch, or
+>    a deployed/wired target environment (boundary TYPES, not a closed keyword
+>    list — match on behaviour, not wording). Every boundary-crossing AC id must
+>    appear in the section's `Live-bearing AC IDs`. If it is ambiguous whether an
+>    AC crosses such a boundary, treat it as live-bearing (default stricter).
+>    Surface a missing/empty section or an omitted live-bearing AC as a finding.
+>    Spec-internal judgment only — do NOT read test source or judge per-AC
+>    coverage (those belong to code-review batch / epic-close).
 >
 > Return findings sorted by severity (Critical, High, Medium, Low). Each finding cites the section and a concrete fix. End with verdict: approve | revise | block.
 

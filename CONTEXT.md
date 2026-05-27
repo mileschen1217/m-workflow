@@ -61,6 +61,8 @@ The live set of role-instances. Single source of truth — ADRs classify; this t
 
 `grounded-claims` was formerly named `ground-as-source`; renamed to disambiguate from the `source-as-truth` Discipline (they govern different relationships — doc↔source vs claim↔evidence; see ADR-0002).
 
+`grounded-claims` and the in-flight `testing-strategy` honesty gate share one spine (claim ≤ evidence) on different surfaces: `grounded-claims` governs **narration** (every sentence a session SAYS must cite or carry `[假設]`); `testing-strategy` governs **deliverable certification** (every AC the workflow marks done must be backed by a test at the right layer, or carry `[unverified]`). Siblings, not duplicates — narration-time vs gate-time.
+
 ### Fire ordering (when multiple fire at one Step)
 
 When several baselines/disciplines/modes are active at the same skill Step, scope-framing fires before content-rules: **`intention-first` (Baseline) → `source-as-truth` (Discipline) → active Modes**. Rationale: the intention gate can reframe scope ("this is a fixture, not a spec") and abort the Step; running it first avoids wasted vocabulary-load cost.
@@ -218,3 +220,15 @@ Transport is agnostic: the request rides result.json (`status: needs-scope-expan
 Constitution. A template lives co-located with its sole owning skill at `skills/<skill>/templates/` (a `templates/` dir even for a single file). The root `templates/` dir is reserved for templates shared by 2+ skills. Skills reference their templates by **plugin-relative path**, never an absolute `~/.claude/skills/m-*` path.
 
 `skills/_shared/` holds ONLY cross-skill instruction blocks referenced by 3+ skills under a single-home requirement (e.g. `step0-resolver.md`); single-skill assets stay co-located in `skills/<skill>/`.
+
+## Verification vocabulary (testing-strategy, in-flight)
+
+Terms coined by the in-flight `testing-strategy` epic. Sharpened here so downstream stages inherit aligned vocabulary; the gate they describe is not yet shipped.
+
+**AC coverage (semantic)** — a per-AC judgment: does some test assert this AC's Then-clause? Decided by a fresh reviewer reading test source (LLM-judged), not measured. Boolean per AC: covered, or `[unverified: reason]`. _Avoid_: bare "coverage" — it reads as code-coverage %. This is NOT line/branch percentage and is never tool-measured. The deterministic tool only checks the standing spec state — every AC enumerable, every `[unverified]` carries a reason (a structural floor) — never computes a %.
+
+**evidence-honesty criteria** — checks the existing reviewer applies during normal review: reads test source, judges AC↔test semantic coverage, forces `[unverified: reason]` on any AC it cannot confirm. A **lens, not a separate pass or agent** — the existing `code-reviewer` / `cross-provider-reviewer` runs it at gates that already exist (declare-strategy @ design-review, advisory @ batch). _Avoid_: "audit" / "auditor" / "honesty gate" — each nominalizes the lens into a standalone activity and wrongly invites a new agent, a new pass, or a new Review-Gate row. Say "the reviewer applies the evidence-honesty criteria".
+
+**epic-close evidence reckoning** — the one genuinely new checkpoint: at epic close, every AC is reckoned — covered, or carried as an enumerated `[unverified: reason]` (live-bearing ACs may not use `[unverified]`). Blocking: the reckoning must be complete + clean or consciously waived. It hangs on the existing epic-close procedure; it is NOT a new row in the Review Gate table.
+
+**evidence** (for an AC) — what backs the claim that an AC is done, scoped by phase. **P1**: in-repo test source + the AC's covered/`[unverified]` state, which the reviewer reads directly. **P2**: a live / runtime artifact (powered-on evidence — captured output of a wired/deployed path), which needs provenance (P1 does not; deferred to P2). _Avoid_: treating the production diff or commit timing as evidence — the lens is production-source-agnostic and commit-agnostic; the accounting unit is the AC, never the commit.
