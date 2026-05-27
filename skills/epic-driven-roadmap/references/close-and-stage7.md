@@ -114,16 +114,26 @@ and the testing-strategy spec Interfaces §5.
    | AC | Covered by (test ref, derived at close) | [unverified: reason] | live-bearing? | waiver | Issue |
    |----|----------------------------------------|----------------------|---------------|--------|-------|
 
-   - "Covered by" = the test the reviewer found asserting the AC; blank ⇒ no coverage found.
+   - "Covered by" = the evidence the reviewer found asserting the AC; blank ⇒ no
+     coverage found. For a **non-live-bearing** AC this is a test reference. For a
+     **live-bearing** AC (Phase 2) it MUST reference a **live artifact with
+     provenance** (producer identity + freshness — commit/timestamp), NOT a static
+     proxy (grep result / mock / env-faked condition / deployed-file read).
+     Satisfying example cell:
+     `Covered by: live artifact .m-workflow/epics/<slug>/evidence/<name>.md @ <commit-sha> via <producer>`
    - "live-bearing?" = "yes" if the AC is listed in its spec's Verification Strategy `Live-bearing AC IDs`.
    - "waiver" = a human, at close, writes a rationale to consciously proceed past a NON-LIVE gap.
    - "Issue" = the filed/linked debt issue for each `[unverified]` / waiver row.
 
 4. **Apply the blocking rules:**
    - A non-live-bearing row with no "Covered by", no `[unverified]`, and no waiver ⇒ **BLOCKS close**.
-   - A live-bearing row closes ONLY with a cited "Covered by" live evidence — it
-     may NOT use `[unverified]` AND may NOT be waived. An uncovered live-bearing AC ⇒
-     **BLOCKS close** (the only honest P1 close is to defer the whole AC to Phase 2).
+   - A live-bearing row closes ONLY with a "Covered by" cell that references a
+     **live artifact with provenance** (per the table-description above).
+     A static proxy (grep / mock / env-faked condition / deployed-file read) does
+     NOT satisfy a live-bearing row ⇒ **BLOCKS close**. `[unverified]` is **unavailable** for a
+     live-bearing row, and a live-bearing row may NOT be waived. An uncovered /
+     `[unverified]` / static-proxy-only live-bearing AC ⇒ **BLOCKS close** — the only
+     honest path is to defer the whole AC to a later phase.
    - An `[unverified]` or waiver row with an empty Issue cell ⇒ **BLOCKS close** until a debt issue is filed/linked.
    - An un-reckoned AC (no row) ⇒ **BLOCKS close**.
 
