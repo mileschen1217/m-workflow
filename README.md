@@ -25,6 +25,30 @@ claude plugin install touchstone@touchstone --scope user
 
 ⚠️ Plugin dispatches agents and runs bash; use in trusted contexts only.
 
+## Dependencies
+
+Touchstone delegates work to agents and skills that live in other plugins. Install these before running touchstone skills.
+
+**Required:**
+
+```bash
+# everything-claude-code — architect agent + language-specific reviewers
+claude plugin marketplace add https://github.com/your-org/everything-claude-code   # check upstream URL
+claude plugin install everything-claude-code@everything-claude-code --scope user
+
+# superpowers — writing-plans, using-git-worktrees, brainstorming, etc.
+claude plugin install superpowers@claude-plugins-official --scope user
+```
+
+**Optional (cross-vendor review path):**
+
+```bash
+# codex — cross-vendor agents (codex:rescue, codex-* reviewers/implementers)
+claude plugin install codex@openai-codex --scope user
+```
+
+Without `everything-claude-code`, the language-specific code reviewers and the `architect` agent dispatched by `cross-provider-architect` are unavailable. Without `codex`, only single-vendor (Claude-only) review paths work — touchstone degrades gracefully but loses the parallel CC+Codex composite.
+
 ## Skills
 
 - `touchstone:init` — Bootstrap project adoption with `.claude/touchstone.yaml`.
@@ -50,18 +74,6 @@ claude plugin install touchstone@touchstone --scope user
 ## 6-stage workflow
 
 The full workflow lives in your global `~/.claude/CLAUDE.md` (touchstone integrates as routing). See `docs/comparisons.md` for scope and `CONTEXT.md` for vocabulary.
-
-## Migration from m-workflow
-
-Touchstone is the renamed successor of `m-workflow`. The plugin executes **step0-resolver § 3 propose-confirm-execute** on first invocation: legacy `.m-workflow/` workspace + `.claude/m-workflow.yaml` cfg are detected via the Lineage entry, a concrete mv proposal is presented, and renaming happens **only on your explicit confirmation**. Nothing destructive happens silently; `.bak` files left in place.
-
-For your global `~/.claude/CLAUDE.md` routing (outside plugin write scope), run once:
-
-```bash
-sed -i.bak 's/m-workflow:/touchstone:/g; s/m-workflow/touchstone/g' ~/.claude/CLAUDE.md
-```
-
-GitHub auto-redirect handles in-flight clones of the old `mileschen1217/m-workflow` URL.
 
 ## Status
 
