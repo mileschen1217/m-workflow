@@ -1,5 +1,4 @@
 ---
----
 name: arch-review
 description: |
   Standalone architecture consult. Invoke BEFORE writing a design spec when
