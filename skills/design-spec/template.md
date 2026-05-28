@@ -90,7 +90,7 @@ Then <observable outcome>
 ## Verification Strategy
 
 > Coarse, risk-scaled — NOT per-AC. ~4–7 lines. States which risk layers this
-> feature needs and which ACs carry live evidence. Read at design-review (presence
+> feature needs and which ACs require a live artifact. Read at design-review (presence
 > + live-bearing coherence) and at epic-close (the live-bearing list gates which
 > ACs may NOT be carried as `[unverified]`). See `docs/adr/0009-evidence-honesty-gate.md`.
 
