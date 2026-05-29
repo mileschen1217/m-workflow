@@ -20,3 +20,8 @@ sys.modules["skills"] = _skills
 sys.modules["skills.epic_driven_roadmap"] = _pkg
 sys.modules["skills.epic_driven_roadmap.adapters"] = _adapt
 sys.modules["skills.epic_driven_roadmap.adapters.local_markdown"] = _lm
+# register tests sub-package for epic_driven_roadmap (avoids No module named 'tests.test_*')
+_tests = types.ModuleType("epic_driven_roadmap.tests")
+_tests.__path__ = [str(ROOT / "skills/epic-driven-roadmap/tests")]
+sys.modules["epic_driven_roadmap.tests"] = _tests
+sys.modules["skills.epic_driven_roadmap.tests"] = _tests
