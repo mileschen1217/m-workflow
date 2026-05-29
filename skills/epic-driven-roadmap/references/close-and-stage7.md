@@ -1,14 +1,39 @@
 # Close an epic
 
 0. **Verify Stage 7 ship before stamping anything.** Close = Stage 8; it presupposes Stage 7 ship is complete. Ship means the project-defined deliverable handoff has landed (e.g. merged PR on `main`, pushed tag, deployed artifact). Local commit / open PR / pushed feature branch ≠ shipped. Before any `landed:` stamp: gather evidence (your choice of tool — `gh pr list --state merged`, `git log origin/main`, project-specific check), propose it to the user, obtain explicit ack. Zero evidence → refuse close and tell the user to ship first. Stamping `landed:` ahead of ship = honesty-spine violation (claim > evidence). Skip only if the user explicitly waives ship verification this turn.
-1. Mark all phases `done` with landed dates.
-2. Set frontmatter `status: done`, `landed: YYYY-MM-DD`.
+1. Mark all phases done with landed dates via the adapter:
+
+   ```bash
+   DATA=$(python skills/epic-driven-roadmap/adapters/local-markdown/cli.py read --slug "$SLUG")
+   # Update each phase's landed date, then write back:
+   python skills/epic-driven-roadmap/adapters/local-markdown/cli.py write --slug "$SLUG" \
+     --section phases --value "$UPDATED_PHASES"
+   ```
+
+   If exit code is non-zero, surface the typed error class from stderr and stop —
+   do not proceed with partial data.
+2. Set frontmatter `status` and `landed` via the adapter:
+
+   ```bash
+   python skills/epic-driven-roadmap/adapters/local-markdown/cli.py write --slug "$SLUG" \
+     --field status=done \
+     --field landed="$(date +%Y-%m-%d)"
+   ```
+
+   If exit code is non-zero, surface the typed error class from stderr and stop —
+   do not proceed with partial data.
 3. Fill the Retrospective block — bullets only; typical: What worked, What pivoted, What to do differently.
-4. Run **Stage 7 — Doc Reckoning** (see below) and append the block to the epic index.
+4. Run **Stage 7 — Doc Reckoning** (see below) and append the block to the epic index via the adapter:
+
+   ```bash
+   python skills/epic-driven-roadmap/adapters/local-markdown/cli.py write --slug "$SLUG" \
+     --section "Doc Reckoning (Stage 7)" --value "$RECKONING_BLOCK"
+   ```
+
 4b. Run **Evidence Reckoning** (BLOCKING — distinct from, and does not weaken, the
     advisory Stage 7 above). See § Evidence Reckoning below. Close cannot complete
     until the reckoning table is built and every blocking rule is satisfied.
-5. Remove the row from ROADMAP § Active Epics; add to § Completed Epics with the landed date.
+5. Remove the row from ROADMAP § Active Epics; add to § Completed Epics with the landed date. <!-- phase-2-carve-out -->
 6. Commit.
 
 ## Stage 7 — Doc Reckoning
@@ -19,7 +44,17 @@ Mechanical inventory of what this epic did to the doc graph. Lists facts; does n
 **Inputs**
 
 - Epic slug.
-- Git range `--since <epic.started> --until <epic.landed>` (or branch range if known).
+- Git range derived from the epic's `started` and `landed` fields. Read them via the adapter:
+
+  ```bash
+  DATA=$(python skills/epic-driven-roadmap/adapters/local-markdown/cli.py read --slug "$SLUG")
+  STARTED=$(echo "$DATA" | jq -r .started)
+  LANDED=$(echo "$DATA" | jq -r .landed)
+  # Then: git log --since "$STARTED" --until "$LANDED" ...
+  ```
+
+  If exit code is non-zero, surface the typed error class from stderr and stop —
+  do not proceed with partial data.
 
 **Procedure**
 
@@ -46,7 +81,15 @@ Mechanical inventory of what this epic did to the doc graph. Lists facts; does n
    - **Whole spec is cross-cutting** (rare) → copy whole spec to `.touchstone/docs/architecture/`, retire original.
    This is a judgment call, not auto-executed. Stage 7 surfaces the candidates; the human (or author at next session) executes the move and frontmatter rewrite.
 
-**Output — append to epic `index.md`**
+**Output — append to epic `index.md` via the adapter:**
+
+```bash
+python skills/epic-driven-roadmap/adapters/local-markdown/cli.py write --slug "$SLUG" \
+  --section "Doc Reckoning (Stage 7)" --value "$RECKONING_BLOCK"
+```
+
+If exit code is non-zero, surface the typed error class from stderr and stop —
+do not proceed with partial data. The block to append follows this template:
 
 ```markdown
 ## Doc Reckoning (Stage 7)
@@ -152,6 +195,14 @@ and the testing-strategy spec Interfaces §5.
    - An `[unverified]` or waiver row with an empty Issue cell ⇒ **BLOCKS close** until a debt issue is filed/linked.
    - An un-reckoned AC (no row) ⇒ **BLOCKS close**.
 
-5. **Record** the completed table in the epic-close block of the epic `index.md`.
+5. **Record** the completed reckoning table via the adapter:
+
+   ```bash
+   python skills/epic-driven-roadmap/adapters/local-markdown/cli.py write --slug "$SLUG" \
+     --section "Evidence Reckoning" --value "$RECKONING_TABLE"
+   ```
+
+   If exit code is non-zero, surface the typed error class from stderr and stop —
+   do not proceed with partial data.
 
 A healthy close has an empty `[unverified]` set.
