@@ -65,3 +65,54 @@ def test_read_populated_epic(tmp_path: Path):
     assert data.phases[1].landed is None
     assert data.retrospective == ["Tighter scope helped."]
     assert data.open_questions == ["Concurrency?"]
+
+
+ERRDIR = Path(__file__).parent / "errors"
+
+
+def _seed(tmp_path: Path, slug: str, fixture_name: str) -> Path:
+    src = ERRDIR / fixture_name
+    root = tmp_path / "epics"
+    (root / slug).mkdir(parents=True)
+    (root / slug / "index.md").write_text(src.read_text())
+    return root
+
+
+def test_read_missing_slug_raises_epic_not_found(tmp_path: Path):
+    a = A.LocalMarkdownAdapter(root=tmp_path / "epics")
+    with pytest.raises(S.EpicNotFound) as exc:
+        a.read("nope")
+    assert exc.value.slug == "nope"
+
+
+def test_read_missing_required_field_raises_schema_validation(tmp_path: Path):
+    root = _seed(tmp_path, "bad", "missing_status.md")
+    a = A.LocalMarkdownAdapter(root=root)
+    with pytest.raises(S.SchemaValidationError) as exc:
+        a.read("bad")
+    assert exc.value.field == "status"
+
+
+def test_read_schema_version_mismatch_raises(tmp_path: Path):
+    root = _seed(tmp_path, "bad", "schema_v99.md")
+    a = A.LocalMarkdownAdapter(root=root)
+    with pytest.raises(S.SchemaVersionMismatch) as exc:
+        a.read("bad")
+    assert exc.value.found == 99 and exc.value.expected == 1
+
+
+def test_read_structural_host_missing_raises(tmp_path: Path):
+    root = _seed(tmp_path, "bad", "missing_open_questions.md")
+    a = A.LocalMarkdownAdapter(root=root)
+    with pytest.raises(S.StructuralHostMissingError) as exc:
+        a.read("bad")
+    assert exc.value.field == "open_questions"
+
+
+def test_read_invalid_phase_status_raises_schema_validation(tmp_path: Path):
+    """M1 — phase status outside STATUS_VALUES → SchemaValidationError."""
+    root = _seed(tmp_path, "bad", "invalid_phase_status.md")
+    a = A.LocalMarkdownAdapter(root=root)
+    with pytest.raises(S.SchemaValidationError) as exc:
+        a.read("bad")
+    assert "phases[" in exc.value.field and ".status" in exc.value.field
