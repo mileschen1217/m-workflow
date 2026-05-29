@@ -1,6 +1,6 @@
 # Close an epic
 
-0. **Verify Stage 7 ship before stamping anything.** Close = Stage 8; it presupposes Stage 7 ship is complete. Ship means the project-defined deliverable handoff has landed (e.g. merged PR on `main`, pushed tag, deployed artifact). Local commit / open PR / pushed feature branch ≠ shipped. Before any `landed:` stamp: gather evidence (your choice of tool — `gh pr list --state merged`, `git log origin/main`, project-specific check), propose it to the user, obtain explicit ack. Zero evidence → refuse close and tell the user to ship first. Stamping `landed:` ahead of ship = honesty-spine violation (claim > evidence). Skip only if the user explicitly waives ship verification this turn.
+0. **Verify Stage 7 ship before stamping anything.** Close = Stage 8; it presupposes Stage 7 ship is complete. Ship means the project-defined deliverable handoff has landed (e.g. merged PR on `main`, pushed tag, deployed artifact). Local commit / open PR / pushed feature branch ≠ shipped. Before any `landed:` stamp: gather evidence (your choice of tool — `gh pr list --state merged`, `git log origin/main`, project-specific check), propose it to the user, obtain explicit ack. Zero evidence → refuse close and tell the user to ship first. Stamping `landed:` ahead of ship = honesty-spine violation (claim > evidence). Skip only if the user explicitly waives ship verification this turn. <!-- phase-2-carve-out -->
 1. Mark all phases done with landed dates via the adapter:
 
    ```bash
@@ -81,7 +81,7 @@ Mechanical inventory of what this epic did to the doc graph. Lists facts; does n
    - **Whole spec is cross-cutting** (rare) → copy whole spec to `.touchstone/docs/architecture/`, retire original.
    This is a judgment call, not auto-executed. Stage 7 surfaces the candidates; the human (or author at next session) executes the move and frontmatter rewrite.
 
-**Output — append to epic `index.md` via the adapter:**
+**Output — append to epic `index.md` via the adapter:** <!-- phase-2-carve-out -->
 
 ```bash
 python skills/epic-driven-roadmap/adapters/local-markdown/cli.py write --slug "$SLUG" \
@@ -134,7 +134,7 @@ and the testing-strategy spec Interfaces §5.
 
 **Procedure**
 
-1. **Structural floor first.** For each `status: Accepted` spec of this epic, run
+1. **Structural floor first.** For each `status: Accepted` spec of this epic, run <!-- phase-2-carve-out -->
    `scripts/check-spec-floor.sh <spec-path>`. Any non-zero exit BLOCKS close — fix
    the spec (un-enumerable AC set, duplicate AC id, or an empty `[unverified]`
    reason) before continuing. This is the deterministic gate; coverage judgment is
@@ -178,7 +178,7 @@ and the testing-strategy spec Interfaces §5.
      provenance** (producer identity + freshness — commit/timestamp), NOT a static
      proxy (grep result / mock / env-faked condition / deployed-file read).
      Satisfying example cell:
-     `Covered by: live artifact .touchstone/epics/<slug>/evidence/<name>.md @ <commit-sha> via <producer>`
+     `Covered by: live artifact .touchstone/epics/<slug>/evidence/<name>.md @ <commit-sha> via <producer>` <!-- phase-2-carve-out -->
    - "live-bearing?" = "yes" if the AC is listed in its spec's Verification Strategy `Live-bearing AC IDs`.
    - "waiver" = a human, at close, writes a rationale to consciously proceed past a NON-LIVE gap.
    - "Issue" = the filed/linked debt issue for each `[unverified]` / waiver row.

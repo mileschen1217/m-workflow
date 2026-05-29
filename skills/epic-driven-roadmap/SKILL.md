@@ -118,7 +118,7 @@ Two distinct artifacts; do not conflate.
       case-sensitively):
       - "Intention (why):" motivation / pain in one line
       - "Aim:" observable success at epic scope in one line
-        (recorded into the **Aim:** headline, not a ## Foundation field)
+        (recorded into the **Aim:** headline, not a ## Foundation field) <!-- phase-2-carve-out -->
       - "Out of scope:" ≤3 explicit routes not taken
 
       The SYNTHESISED aim must not contain a vague token
@@ -147,8 +147,8 @@ Two distinct artifacts; do not conflate.
       note verbatim to Open Questions (do not paraphrase):
       "(aim contains an unverifiable token — user-confirmed)"
 
-   e. Record the confirmed foundation: aim into the **Aim:** headline,
-      intention + out-of-scope into ## Foundation (template below).
+   e. Record the confirmed foundation: aim into the **Aim:** headline, <!-- phase-2-carve-out -->
+      intention + out-of-scope into ## Foundation (template below). <!-- phase-2-carve-out -->
       This is the highest-ROI step — it prevents a spec being written
       for the wrong scope.
 1. Pick a slug — lowercase, hyphen-separated, names the **deliverable surface** (e.g. `port-statistics-stacking`), not a phase number.
@@ -162,8 +162,8 @@ Two distinct artifacts; do not conflate.
      --field status=proposed
    ```
 
-   Then populate `**Aim:**`, `## Foundation`, `owner_teams`, and Phase 1 into the created
-   `<epics-dir>/<slug>/index.md`. If exit code is non-zero, surface the typed error class
+   Then populate `**Aim:**`, `## Foundation`, `owner_teams`, and Phase 1 into the created <!-- phase-2-carve-out -->
+   `<epics-dir>/<slug>/index.md`. If exit code is non-zero, surface the typed error class <!-- phase-2-carve-out -->
    from stderr and stop — do not proceed with partial data.
 4. Add a row to `ROADMAP.md` § Active Epics: `| <slug> | <aim> | proposed | [index](<epics-dir>/<slug>/index.md) |`. <!-- phase-2-carve-out -->
 5. When creating content docs (research, specs, plans, ADRs) for this epic, add frontmatter `epics: [<slug>]` so the backlink exists from day one. See `templates/content-doc.md`.
@@ -205,7 +205,7 @@ Projects may adjust paths; the convention is the shape, not the directory names.
 ## Templates
 
 - `templates/ROADMAP.md` — pure-tracker ROADMAP
-- `templates/epic-index.md` — epic tracker
+- `templates/epic-index.md` — epic tracker <!-- phase-2-carve-out -->
 - `templates/content-doc.md` — research / spec / plan / ADR / reflection (frontmatter shape only; body is free-form)
 
 Copy verbatim; edit in place.
