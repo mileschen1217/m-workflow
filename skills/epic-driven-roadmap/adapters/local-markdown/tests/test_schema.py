@@ -61,8 +61,8 @@ def test_every_epicdata_field_has_consumer_or_sidecar_metadata():
     """AC-2a — no field exists without consumer or sidecar_rationale."""
     for f in dataclasses.fields(S.EpicData):
         meta = f.metadata
-        has_consumer = "consumer" in meta and meta["consumer"]
-        has_sidecar = "sidecar_rationale" in meta and meta["sidecar_rationale"]
+        has_consumer = bool(meta.get("consumer"))
+        has_sidecar = bool(meta.get("sidecar_rationale"))
         assert has_consumer ^ has_sidecar, (
             f"EpicData.{f.name} must carry exactly one of consumer/sidecar_rationale; got {dict(meta)}"
         )
@@ -72,8 +72,8 @@ def test_every_phasedata_field_has_consumer_or_sidecar_metadata():
     """AC-2a — same rule for PhaseData."""
     for f in dataclasses.fields(S.PhaseData):
         meta = f.metadata
-        has_consumer = "consumer" in meta and meta["consumer"]
-        has_sidecar = "sidecar_rationale" in meta and meta["sidecar_rationale"]
+        has_consumer = bool(meta.get("consumer"))
+        has_sidecar = bool(meta.get("sidecar_rationale"))
         assert has_consumer ^ has_sidecar, (
             f"PhaseData.{f.name} must carry exactly one of consumer/sidecar_rationale; got {dict(meta)}"
         )
