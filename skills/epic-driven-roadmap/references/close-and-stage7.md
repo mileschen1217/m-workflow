@@ -1,5 +1,6 @@
 # Close an epic
 
+0. **Verify Stage 7 ship before stamping anything.** Close = Stage 8; it presupposes Stage 7 ship is complete. Ship means the project-defined deliverable handoff has landed (e.g. merged PR on `main`, pushed tag, deployed artifact). Local commit / open PR / pushed feature branch ≠ shipped. Before any `landed:` stamp: gather evidence (your choice of tool — `gh pr list --state merged`, `git log origin/main`, project-specific check), propose it to the user, obtain explicit ack. Zero evidence → refuse close and tell the user to ship first. Stamping `landed:` ahead of ship = honesty-spine violation (claim > evidence). Skip only if the user explicitly waives ship verification this turn.
 1. Mark all phases `done` with landed dates.
 2. Set frontmatter `status: done`, `landed: YYYY-MM-DD`.
 3. Fill the Retrospective block — bullets only; typical: What worked, What pivoted, What to do differently.
