@@ -15,7 +15,7 @@ will fail the drift gate at PR time.
 | `status` | Stage 7 ship gate; audit status-drift (carve-out) |
 | `started` | Stage 7 ship gate (range boundary); required if status != 'proposed' |
 | `landed` | Stage 7 ship gate; required if status == 'done' |
-| `aim` | Foundation elicitation gate (Foundation elicitation reuse check) |
+| `aim` | Foundation elicitation gate (reuse check) |
 | `intention` | Foundation elicitation gate |
 | `out_of_scope` | Foundation elicitation gate |
 | `phases` | close procedure; ROADMAP rollup (carve-out) |

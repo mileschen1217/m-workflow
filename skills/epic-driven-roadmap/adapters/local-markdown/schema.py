@@ -134,7 +134,7 @@ class EpicData:
     status: str = field(default="proposed", metadata={"consumer": "Stage 7 ship gate; audit status-drift (carve-out)"})
     started: Optional[str] = field(default=None, metadata={"consumer": "Stage 7 ship gate (range boundary); required if status != 'proposed'"})
     landed: Optional[str] = field(default=None, metadata={"consumer": "Stage 7 ship gate; required if status == 'done'"})
-    aim: str = field(default="", metadata={"consumer": "Foundation elicitation gate (Foundation elicitation reuse check)"})
+    aim: str = field(default="", metadata={"consumer": "Foundation elicitation gate (reuse check)"})
     intention: str = field(default="", metadata={"consumer": "Foundation elicitation gate"})
     out_of_scope: list = field(default_factory=list, metadata={"consumer": "Foundation elicitation gate"})
     phases: list = field(default_factory=list, metadata={"consumer": "close procedure; ROADMAP rollup (carve-out)"})
