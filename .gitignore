@@ -10,3 +10,4 @@ __pycache__/
 .claude/worktrees/
 CLAUDE.local.md
 ROADMAP.md
+.venv/

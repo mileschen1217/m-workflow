@@ -3,3 +3,4 @@
 schema_version: 2
 workspace_root: .touchstone
 adopted_disciplines: [source-as-truth]
+# epic_storage: local-markdown    # default; uncomment to declare explicitly

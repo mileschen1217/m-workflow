@@ -99,6 +99,12 @@ workspace_root: <answer or .touchstone>
 adopted_disciplines: [<comma-separated answers>]
 ```
 
+Recognised optional keys:
+
+- `epic_storage: <name>` (optional) — selects the storage adapter for
+  `epic-driven-roadmap`. Defaults to `local-markdown`. Unknown values raise
+  `AdapterNotFoundError` (exit 8) at Step 0.
+
 If overwriting (`--reset` mode), first copy the existing file to `${CLAUDE_PROJECT_DIR}/.claude/touchstone.yaml.bak`. Print "Preserved prior yaml at .bak".
 
 ## Step 6 — Verification summary

@@ -11,7 +11,7 @@ A healthy doc has both directions in agreement. The audit maintains bidirectiona
 
 1. **Status drift** — every ROADMAP row's status must match the epic index frontmatter `status:`. Mismatch → finding.
 2. **Staleness** — any `active` epic whose index is untouched (`git log -1 --format=%cs`) >30 days. Flag for push / pause / close.
-3. **Epic orphans** — `.touchstone/epics/<slug>/` with no ROADMAP row, or ROADMAP row pointing at a non-existent index.
+3. **Epic orphans** — `.touchstone/epics/<slug>/` with no ROADMAP row, or ROADMAP row pointing at a non-existent index. <!-- phase-2-carve-out -->
 4. **Scope overlap** — grep epic aims for shared nouns; flag only if overlap looks real.
 
 **Link-health checks** (mix of auto-fix and report)
@@ -32,7 +32,7 @@ A healthy doc has both directions in agreement. The audit maintains bidirectiona
     - If `contract.md` frontmatter declares `status: done` AND `result.json` does not exist OR `result.json` mtime < `contract.md` mtime → finding "done declared, no result" or "stale result".
     - If `result.json` declares `status: done` AND `contract.md` declares `status: pending` → finding "result ahead of contract".
 
-11. **Task orphans (AC G3)** — for each task-dir under `.touchstone/epics/<slug>/tasks/`:
+11. **Task orphans (AC G3)** — for each task-dir under `.touchstone/epics/<slug>/tasks/`: <!-- phase-2-carve-out -->
     - If parent `<slug>` has no entry in ROADMAP § Active or Completed → finding "task under orphan epic".
     - If task-id path lacks `contract.md` → finding "task with no contract".
 
@@ -43,7 +43,7 @@ A healthy doc has both directions in agreement. The audit maintains bidirectiona
 
 **Running the checks**
 
-- Enumerate files with `git ls-files`; include `.touchstone/epics/**/index.md`, `.touchstone/research/**/*.md`, `.touchstone/specs/**/*.md`, `.touchstone/plans/**/*.md`, `.touchstone/docs/adr/**/*.md`, `ROADMAP.md`.
+- Enumerate files with `git ls-files`; include `.touchstone/epics/**/index.md`, `.touchstone/research/**/*.md`, `.touchstone/specs/**/*.md`, `.touchstone/plans/**/*.md`, `.touchstone/docs/adr/**/*.md`, `ROADMAP.md`. <!-- phase-2-carve-out -->
 - Parse markdown links with `\[[^\]]+\]\(([^)]+)\)`; resolve relative to the source file.
 - Frontmatter: grep the top-of-file `^---` block for `^epics:`; no YAML library needed. Accept both inline (`epics: [a, b]`) and block-list forms.
 - Auto-fix writes: stage edits in a single commit with message `docs(audit): backfill epics: frontmatter from inbound links`; do not commit if any non-auto-fix finding is unresolved — let the user triage first.

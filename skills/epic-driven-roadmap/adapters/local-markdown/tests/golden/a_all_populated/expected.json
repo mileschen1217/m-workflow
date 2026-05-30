@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "status": "active",
+  "started": "2026-05-01",
+  "landed": "2026-05-20",
+  "aim": "ship the demo.",
+  "intention": "prove the loop.",
+  "out_of_scope": ["scope creep.", "gold plating."],
+  "phases": [
+    {"n": 1, "title": "Discover", "status": "done", "landed": "2026-05-10"},
+    {"n": 2, "title": "Build", "status": "done", "landed": "2026-05-15"}
+  ],
+  "retrospective": ["Tighter scope helped.", "Adapter swap worked."],
+  "open_questions": ["Concurrency strategy?"],
+  "sidecar": {
+    "retro_scanned": "2026-05-22",
+    "pivots": ["cut concurrency"]
+  }
+}

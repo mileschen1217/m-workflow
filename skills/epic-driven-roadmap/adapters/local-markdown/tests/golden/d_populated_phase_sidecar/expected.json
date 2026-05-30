@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "status": "active",
+  "started": "2026-05-01",
+  "landed": null,
+  "aim": "x.",
+  "intention": "",
+  "out_of_scope": [],
+  "phases": [
+    {"n": 1, "title": "Discover", "status": "done", "landed": "2026-05-10",
+     "sidecar": {"spec": "specs/x.md", "plan": "plans/x.md"}}
+  ],
+  "retrospective": [],
+  "open_questions": [],
+  "sidecar": {}
+}

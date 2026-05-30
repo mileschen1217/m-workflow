@@ -3,9 +3,9 @@
 Tasks are finer-grained execution units within an epic phase. They produce L0 artifacts (`result.json`, optional `review.md`) per the multi-vendor dispatch convention.
 
 1. Pick a task-id — `T<NN>-<short-slug>`, lowercase, hyphen-separated. NN is sequence within the epic (T01, T02, ...).
-2. Resolve concrete path from project CLAUDE.md § Doc Routing — typically `.touchstone/epics/<slug>/tasks/<task-id>/`.
-3. Copy `templates/task-contract.md` to `<epics-dir>/<slug>/tasks/<task-id>/contract.md`. Fill in: `task_id`, `epic` slug, `role`, `runtime`, `created`.
-4. (optional) Copy `templates/task-result.json` to the same dir as `result.json` initialized with `status: pending`.
+2. Resolve concrete path from project CLAUDE.md § Doc Routing — typically `.touchstone/epics/<slug>/tasks/<task-id>/`. <!-- phase-2-carve-out -->
+3. Copy `templates/task-contract.md` to `<epics-dir>/<slug>/tasks/<task-id>/contract.md`. Fill in: `task_id`, `epic` slug, `role`, `runtime`, `created`. <!-- phase-2-carve-out -->
+4. (optional) Copy `templates/task-result.json` to the same dir as `result.json` initialized with `status: pending`. <!-- phase-2-carve-out -->
 5. Commit.
 
 ## Task contract scope
@@ -51,7 +51,7 @@ The plan markdown sequences contracts and CC tasks together; contracts live unde
 
 ## Close a task
 
-1. Mark contract.md frontmatter `status: done` (or `failed`).
+1. Mark contract.md frontmatter `status: done` (or `failed`). <!-- phase-2-carve-out -->
 2. Update result.json with completion fields: `status`, `summary`, `files_changed`, `commands_run`, `tests_passed`, `risks`, `handoff_notes`, `completed_at`, `duration_ms`, `fallback_reason`.
 3. (optional) If a cross-provider review ran, ensure `review.md`, `raw_cc.md`, `raw_codex.jsonl` are present.
 4. Commit.

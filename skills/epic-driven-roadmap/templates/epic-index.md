@@ -2,10 +2,7 @@
 slug: <slug>
 status: proposed            # proposed | active | paused | done | cancelled
 started:                    # YYYY-MM-DD when work begins
-target:                     # optional YYYY-MM-DD
 landed:                     # set on close
-owner_teams: []
-gitlab_issues: []
 ---
 
 # <Epic Title>
