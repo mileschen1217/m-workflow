@@ -10,9 +10,6 @@ import os
 import re
 from dataclasses import asdict
 from pathlib import Path
-from typing import Optional
-
-import yaml
 
 from . import schema as S
 from .schema import (
@@ -33,6 +30,192 @@ CANONICAL_FRONTMATTER_KEYS = {
     "schema_version", "slug", "status", "started", "landed",
 }
 SECTION_RE = re.compile(r"^##\s+(.+?)\s*$", re.MULTILINE)
+
+# ---------- stdlib frontmatter parser / emitter ----------
+
+_BARE_KEY_RE = re.compile(r"^([A-Za-z_][A-Za-z0-9_]*):(.*)$")
+_LIST_ITEM_RE = re.compile(r"^  - (.*)$")
+_DICT_PAIR_RE = re.compile(r"^  ([A-Za-z_][A-Za-z0-9_]*): (.*)$")
+_BLOCK_HEAD_RE = re.compile(r"^([A-Za-z_][A-Za-z0-9_]*):\s*([|>])\s*$")
+_INT_RE = re.compile(r"^-?\d+$")
+
+
+def _strip_inline_comment(s: str) -> str:
+    """Strip a trailing YAML inline comment (` #...`) from an unquoted scalar string.
+
+    Handles both ` # comment` (space-hash) and leading-hash-only (`# comment`)
+    as seen in hand-authored frontmatter.
+    """
+    # If the whole thing is a comment token, treat as empty
+    if s.startswith("#"):
+        return ""
+    # Strip ` # comment` suffix (YAML spec: space before hash)
+    idx = s.find(" #")
+    if idx != -1:
+        return s[:idx].rstrip()
+    return s
+
+
+def _parse_scalar(raw: str, slug: str, lineno: int):
+    """Coerce a raw scalar string to None / int / str. Reject unsupported syntax."""
+    s = _strip_inline_comment(raw.strip())
+    if s == "" or s == "null" or s == "~":
+        return None
+    # reject flow-style on a scalar slot
+    if (s.startswith("[") and s.endswith("]")) or (s.startswith("{") and s.endswith("}")):
+        raise S.SchemaValidationError(
+            field="<frontmatter>", slug=slug,
+            reason=f"flow-style not supported (line {lineno})",
+        )
+    # reject anchors / aliases
+    if s.startswith("&") or s.startswith("*"):
+        raise S.SchemaValidationError(
+            field="<frontmatter>", slug=slug,
+            reason=f"anchors/aliases not supported (line {lineno})",
+        )
+    # strip matched quotes
+    if len(s) >= 2 and ((s[0] == s[-1] == '"') or (s[0] == s[-1] == "'")):
+        return s[1:-1]
+    # int?
+    if _INT_RE.fullmatch(s):
+        return int(s)
+    return s
+
+
+def _parse_frontmatter(text: str, slug: str) -> dict:
+    """Parse a frontmatter block (text between the --- delimiters) into a dict.
+
+    Supported subset: flat key:value (str/int/null), list[str], dict[str,str].
+    Anything outside the subset raises SchemaValidationError.
+    """
+    lines = text.splitlines()
+    out: dict = {}
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+        if line.strip() == "" or line.strip().startswith("#"):
+            i += 1
+            continue
+        if _BLOCK_HEAD_RE.match(line):
+            raise S.SchemaValidationError(
+                field="<frontmatter>", slug=slug,
+                reason=f"multiline block scalar (|/>) not supported (line {i + 1})",
+            )
+        m = _BARE_KEY_RE.match(line)
+        if not m:
+            raise S.SchemaValidationError(
+                field="<frontmatter>", slug=slug,
+                reason=f"malformed line {i + 1}: {line!r}",
+            )
+        key, rest = m.group(1), m.group(2)
+        rest_stripped = rest.strip()
+        if rest_stripped:
+            # scalar on same line
+            out[key] = _parse_scalar(rest, slug, i + 1)
+            i += 1
+            continue
+        # rest is empty — look at next lines for list or dict children
+        j = i + 1
+        child_lines = []
+        while j < len(lines) and lines[j].startswith("  "):
+            if lines[j].strip() == "":
+                break
+            child_lines.append((j, lines[j]))
+            j += 1
+        if not child_lines:
+            out[key] = None
+            i = j
+            continue
+        # decide list vs dict by first child line
+        first = child_lines[0][1]
+        if _LIST_ITEM_RE.match(first):
+            items = []
+            for ln_no, ln in child_lines:
+                mm = _LIST_ITEM_RE.match(ln)
+                if not mm:
+                    raise S.SchemaValidationError(
+                        field=key, slug=slug,
+                        reason=f"mixed list/dict children (line {ln_no + 1})",
+                    )
+                item_raw = mm.group(1)
+                # reject nested list items (e.g. "  - - nested")
+                if item_raw.lstrip().startswith("-"):
+                    raise S.SchemaValidationError(
+                        field=key, slug=slug,
+                        reason=f"nested list items not supported (line {ln_no + 1})",
+                    )
+                val = _parse_scalar(item_raw, slug, ln_no + 1)
+                if not isinstance(val, str):
+                    raise S.SchemaValidationError(
+                        field=key, slug=slug,
+                        reason=f"non-str list item (line {ln_no + 1})",
+                    )
+                items.append(val)
+            out[key] = items
+        elif _DICT_PAIR_RE.match(first):
+            d: dict = {}
+            for ln_no, ln in child_lines:
+                mm = _DICT_PAIR_RE.match(ln)
+                if not mm:
+                    raise S.SchemaValidationError(
+                        field=key, slug=slug,
+                        reason=f"mixed list/dict children (line {ln_no + 1})",
+                    )
+                k2, v2 = mm.group(1), mm.group(2).strip()
+                val = _parse_scalar(v2, slug, ln_no + 1)
+                if not isinstance(val, str):
+                    raise S.SchemaValidationError(
+                        field=key, slug=slug,
+                        reason=f"non-str dict value (line {ln_no + 1})",
+                    )
+                d[k2] = val
+            out[key] = d
+        else:
+            raise S.SchemaValidationError(
+                field=key, slug=slug,
+                reason=f"unsupported child syntax (line {child_lines[0][0] + 1})",
+            )
+        i = j
+    return out
+
+
+def _emit_scalar(v) -> str:
+    """Emit a scalar value as a YAML-compatible string."""
+    if v is None:
+        return "null"
+    if isinstance(v, bool):
+        return "true" if v else "false"
+    if isinstance(v, int):
+        return str(v)
+    s = str(v)
+    # quote strings that would be misread by the parser
+    if s == "" or s in ("null", "~", "true", "false") or _INT_RE.fullmatch(s):
+        return f'"{s}"'
+    if any(ch in s for ch in (':', '#', '\n', '[', ']', '{', '}', '&', '*', '|', '>', '"', "'")):
+        # double-quoted form, escape backslash + double quote
+        return '"' + s.replace("\\", "\\\\").replace('"', '\\"') + '"'
+    return s
+
+
+def _emit_frontmatter(fm: dict) -> str:
+    """Emit a frontmatter dict to a YAML-subset string (no surrounding --- markers)."""
+    parts: list[str] = []
+    for k, v in fm.items():
+        if isinstance(v, list):
+            parts.append(f"{k}:")
+            for item in v:
+                if not isinstance(item, str):
+                    raise CanonicalSerialisationError(field=k, backend="local-markdown")
+                parts.append(f"  - {_emit_scalar(item)}")
+        elif isinstance(v, dict):
+            parts.append(f"{k}:")
+            for k2, v2 in v.items():
+                if not isinstance(v2, str):
+                    raise CanonicalSerialisationError(field=k, backend="local-markdown")
+                parts.append(f"  {k2}: {_emit_scalar(v2)}")
+        else:
+            parts.append(f"{k}: {_emit_scalar(v)}")
+    return "\n".join(parts)
 AIM_RE = re.compile(r"^\*\*Aim:\*\*[ \t]*(.*?)[ \t]*$", re.MULTILINE)
 BULLET_RE = re.compile(r"^-\s+(.+?)\s*$", re.MULTILINE)
 INTENTION_BULLET_RE = re.compile(r"^-\s+Intention:\s*(.+?)\s*$", re.MULTILINE)
@@ -195,10 +378,7 @@ class LocalMarkdownAdapter:
             # only str / list[str] / dict[str,str] reach here (validated upstream)
             if k not in fm:
                 fm[k] = v
-        try:
-            fm_text = yaml.safe_dump(fm, sort_keys=False, default_flow_style=False).strip()
-        except yaml.YAMLError as e:
-            raise CanonicalSerialisationError(field="<frontmatter>", backend="local-markdown")
+        fm_text = _emit_frontmatter(fm)
 
         parts = ["---", fm_text, "---", ""]
         parts.append(f"**Aim:** {data.aim}")
@@ -257,8 +437,8 @@ class LocalMarkdownAdapter:
         epic.schema_version = int(fm["schema_version"])
         epic.slug = str(fm["slug"])
         epic.status = str(fm["status"])
-        epic.started = self._coerce_date(fm.get("started"))
-        epic.landed = self._coerce_date(fm.get("landed"))
+        epic.started = fm.get("started")
+        epic.landed = fm.get("landed")
 
         # sidecar = unknown frontmatter keys
         for k, v in fm.items():
@@ -380,10 +560,7 @@ class LocalMarkdownAdapter:
             raise SchemaValidationError(field="<frontmatter>", slug=slug, reason="unterminated frontmatter")
         fm_text = text[4:end]
         body = text[end + 5 :]
-        try:
-            fm = yaml.safe_load(fm_text) or {}
-        except yaml.YAMLError as e:
-            raise SchemaValidationError(field="<frontmatter>", slug=slug, reason=f"yaml error: {e}")
+        fm = _parse_frontmatter(fm_text, slug=slug)
         if not isinstance(fm, dict):
             raise SchemaValidationError(field="<frontmatter>", slug=slug, reason="frontmatter not a mapping")
         return fm, body
@@ -404,16 +581,6 @@ class LocalMarkdownAdapter:
                 raise SchemaValidationError(field=required, slug=slug, reason="missing")
         if fm["status"] not in S.STATUS_VALUES:
             raise SchemaValidationError(field="status", slug=slug, reason=f"unknown status: {fm['status']}")
-
-    @staticmethod
-    def _coerce_date(value) -> Optional[str]:
-        """Return ISO-8601 string or None; handles yaml.safe_load datetime.date objects."""
-        import datetime
-        if value is None or value == "":
-            return None
-        if isinstance(value, (datetime.date, datetime.datetime)):
-            return value.isoformat()[:10]
-        return str(value)
 
     def _sections(self, body: str) -> dict[str, str]:
         out: dict[str, str] = {}

@@ -7,24 +7,33 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import yaml
-
 from .adapters.local_markdown.schema import AdapterNotFoundError
 
 KNOWN_ADAPTERS = {"local-markdown"}
 DEFAULT_ADAPTER = "local-markdown"
 
 
+def _read_epic_storage_key(yaml_path: Path) -> str | None:
+    """Return epic_storage value or None. Lenient: ignores unknown keys."""
+    try:
+        text = Path(yaml_path).read_text()
+    except OSError:
+        return None
+    for line in text.splitlines():
+        s = line.strip()
+        if s.startswith("epic_storage:"):
+            v = s.split(":", 1)[1].strip()
+            # strip quotes if present
+            if len(v) >= 2 and ((v[0] == v[-1] == '"') or (v[0] == v[-1] == "'")):
+                v = v[1:-1]
+            return v or None
+    return None
+
+
 def resolve_adapter_name(yaml_path: Path) -> str:
     if not Path(yaml_path).exists():
         return DEFAULT_ADAPTER
-    try:
-        cfg = yaml.safe_load(Path(yaml_path).read_text()) or {}
-    except yaml.YAMLError:
-        return DEFAULT_ADAPTER
-    if not isinstance(cfg, dict):
-        return DEFAULT_ADAPTER
-    name = cfg.get("epic_storage")
+    name = _read_epic_storage_key(yaml_path)
     if name is None:
         return DEFAULT_ADAPTER
     if name not in KNOWN_ADAPTERS:
