@@ -1,4 +1,4 @@
-"""AC-8 (d) — carve-out audit detects status drift via direct-fs scan
+"""Carve-out audit detects status drift via direct-fs scan
 (NOT via adapter — proves the refactor did not break the carved-out path)."""
 import os
 import re

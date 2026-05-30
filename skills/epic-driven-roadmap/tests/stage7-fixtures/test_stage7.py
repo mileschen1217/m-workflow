@@ -1,4 +1,4 @@
-"""AC-8 (b) — Stage 7 reckoning reads landed/status via the CLI."""
+"""Stage 7 reckoning reads landed/status via the CLI."""
 import json
 import os
 import subprocess

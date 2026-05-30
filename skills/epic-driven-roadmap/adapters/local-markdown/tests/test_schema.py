@@ -58,7 +58,7 @@ import dataclasses
 
 
 def test_every_epicdata_field_has_consumer_or_sidecar_metadata():
-    """AC-2a — no field exists without consumer or sidecar_rationale."""
+    """No field exists without consumer or sidecar_rationale."""
     for f in dataclasses.fields(S.EpicData):
         meta = f.metadata
         has_consumer = bool(meta.get("consumer"))
@@ -69,7 +69,7 @@ def test_every_epicdata_field_has_consumer_or_sidecar_metadata():
 
 
 def test_every_phasedata_field_has_consumer_or_sidecar_metadata():
-    """AC-2a — same rule for PhaseData."""
+    """Same rule for PhaseData."""
     for f in dataclasses.fields(S.PhaseData):
         meta = f.metadata
         has_consumer = bool(meta.get("consumer"))

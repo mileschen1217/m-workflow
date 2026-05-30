@@ -70,7 +70,7 @@ Adopt a **canonical-form contract** with these properties:
    | Field | Read/written by |
    |---|---|
    | `slug`, `status`, `started`, `landed` | identity + Stage 7 ship gate |
-   | `aim`, `intention`, `out_of_scope` | Foundation elicitation gate (AC-10 reuse) |
+   | `aim`, `intention`, `out_of_scope` | Foundation elicitation gate (Foundation elicitation reuse check) |
    | `phases[].{n, title, status, landed}` | close gate (all phases done?) |
    | `retrospective` | close procedure (append on close) |
    | `open_questions` | Phase 1 findings / pivot capture |

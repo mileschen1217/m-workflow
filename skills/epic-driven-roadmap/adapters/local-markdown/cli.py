@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Local-markdown adapter CLI — AC-10 surface.
+"""Local-markdown adapter CLI.
 
 Subcommands: read / write / list / exists.
 Exit codes per spec §Adapter CLI surface (0-9).
@@ -71,7 +71,7 @@ def _epicdata_to_dict(d: S.EpicData) -> dict:
 
 
 def _dict_to_epicdata(d: dict) -> S.EpicData:
-    # M2 — intersect payload keys with EpicData fields; route unknown JSON keys
+    # Intersect payload keys with EpicData fields; route unknown JSON keys
     # into epic-level sidecar so payload round-trips cleanly (no bare TypeError).
     epic_field_names = set(S.EpicData.__dataclass_fields__.keys())
     phase_field_names = set(S.PhaseData.__dataclass_fields__.keys())
@@ -100,7 +100,7 @@ def _dict_to_epicdata(d: dict) -> S.EpicData:
 def _wrap(fn):
     """Decorator: typed-error pass-through above, catch-all → AdapterInternalError
     (exit 9) below. The catch-all is the bottom of every subcommand's stack so
-    spec AC-10 (exit 9 on each subcommand) is satisfied via the real code path."""
+    exit 9 on each subcommand is satisfied via the real code path."""
     def inner(adapter, args):
         try:
             return fn(adapter, args)

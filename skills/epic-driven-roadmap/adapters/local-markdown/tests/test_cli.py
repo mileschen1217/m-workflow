@@ -1,4 +1,4 @@
-"""AC-10 — CLI argv + JSON I/O + exit codes 0-9."""
+"""CLI argv + JSON I/O + exit codes 0-9."""
 import json
 import os
 import subprocess
@@ -152,7 +152,7 @@ def test_cli_exists_absent_exit_1(tmp_path):
 
 
 def test_cli_write_unknown_json_key_routes_to_sidecar_exit_0(tmp_path):
-    """M2 — unknown payload keys land in epic.sidecar (no bare TypeError → exit 9)."""
+    """Unknown payload keys land in epic.sidecar (no bare TypeError → exit 9)."""
     payload = json.dumps({
         "schema_version": 1, "slug": "new", "status": "active",
         "started": "2026-05-01", "landed": None,
@@ -172,7 +172,7 @@ def test_cli_write_unknown_json_key_routes_to_sidecar_exit_0(tmp_path):
 
 @pytest.mark.parametrize("subcommand", ["read", "write", "list", "exists"])
 def test_cli_internal_error_exit_9_per_subcommand(tmp_path, subcommand):
-    """AC-10 exit-9 must trigger on each subcommand when adapter raises an
+    """Exit-9 must trigger on each subcommand when adapter raises an
     uncaught exception. Injection writes a sitecustomize.py into PYTHONPATH
     that monkey-patches the adapter method; production CLI carries NO
     test-only crash hook (the production try/except wraps RuntimeError as

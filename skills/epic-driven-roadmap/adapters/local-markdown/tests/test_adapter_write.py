@@ -1,4 +1,4 @@
-"""AC-4b / AC-4c / AC-7b — write() atomicity + serialisation/sidecar errors."""
+"""write() atomicity + serialisation/sidecar errors."""
 import hashlib
 import os
 from pathlib import Path

@@ -259,7 +259,7 @@ class LocalMarkdownAdapter:
     # ---------- write ----------
 
     def write(self, slug: str, data: EpicData) -> None:
-        # Slug discipline (AC-10 mismatch)
+        # Slug discipline (path-vs-data mismatch)
         if not slug:
             raise SchemaValidationError(field="slug", reason="slug required")
         if not data.slug:
@@ -267,10 +267,10 @@ class LocalMarkdownAdapter:
         if data.slug != slug:
             raise SchemaValidationError(field="slug", slug=slug, reason="path/data mismatch")
 
-        # Stamp schema_version (AC-7b)
+        # Stamp schema_version
         data.schema_version = SCHEMA_VERSION
 
-        # Validate sidecar tag shapes BEFORE touching disk (AC-4c)
+        # Validate sidecar tag shapes BEFORE touching disk
         for k, v in (data.sidecar or {}).items():
             try:
                 validate_sidecar_value(v)
@@ -290,7 +290,7 @@ class LocalMarkdownAdapter:
         # Phases-table cell host can only carry `str` tag.
         # list[str] / dict[str, str] are valid SidecarValue at the schema
         # layer but cannot be expressed in a single table cell — refuse
-        # rather than coerce (AC-6 tag preservation).
+        # rather than coerce (tag preservation).
         for i, ph in enumerate(data.phases or []):
             for k, v in (ph.sidecar or {}).items():
                 if isinstance(v, list):
@@ -328,7 +328,7 @@ class LocalMarkdownAdapter:
                         ),
                     )
 
-        # Conditional-required canonical rules (AC-4 on write). 'cancelled' is exempted.
+        # Conditional-required canonical rules. 'cancelled' is exempted.
         if data.status in ("active", "paused", "done") and data.started is None:
             raise SchemaValidationError(
                 field="started", slug=slug, reason=f"required when status == {data.status!r}",
@@ -470,7 +470,7 @@ class LocalMarkdownAdapter:
             for m_row in PHASE_ROW_RE.finditer(phases_section):
                 landed_raw = m_row.group(4).strip()
                 ph_status = m_row.group(3).strip()
-                # M1 — phase.status must be one of STATUS_VALUES
+                # phase.status must be one of STATUS_VALUES
                 if ph_status not in S.STATUS_VALUES:
                     raise SchemaValidationError(
                         field=f"phases[{int(m_row.group(1))}].status",

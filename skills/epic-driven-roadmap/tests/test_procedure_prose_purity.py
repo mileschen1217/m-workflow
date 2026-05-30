@@ -7,7 +7,7 @@ def test_skill_md_calls_cli_at_least_once():
 
 
 def _build_forbidden_tokens() -> list[str]:
-    """AC-1 — derive forbidden tokens at test time from §Interfaces structural map."""
+    """Derive forbidden tokens at test time from §Interfaces structural map."""
     import dataclasses
     from skills.epic_driven_roadmap.adapters.local_markdown import schema as S
 
@@ -27,7 +27,7 @@ def _build_forbidden_tokens() -> list[str]:
 
 
 def test_index_access_prose_has_no_direct_filesystem_references():
-    """AC-1 — schema-driven grep over in-scope index-access files."""
+    """Schema-driven grep over in-scope index-access files."""
     import re
     from pathlib import Path
     REPO = Path(__file__).resolve().parents[1]
@@ -55,7 +55,7 @@ def test_index_access_prose_has_no_direct_filesystem_references():
             if forbidden.search(line):
                 violations.append(f"{f.relative_to(REPO)}:{lineno}: {line.strip()}")
 
-    assert not violations, "AC-1 violations:\n" + "\n".join(violations)
+    assert not violations, "Prose purity violations:\n" + "\n".join(violations)
 
 
 def test_audit_and_bootstrap_carve_out_lines_are_marked():

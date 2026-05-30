@@ -1,4 +1,4 @@
-"""AC-3 — canonical-field byte-equal round trip over every existing epic on disk."""
+"""Canonical-field byte-equal round trip over every existing epic on disk."""
 import dataclasses
 import shutil
 from pathlib import Path
@@ -41,7 +41,7 @@ def test_round_trip_canonical_byte_equal(tmp_path: Path, slug: str):
     try:
         first = a.read(slug)
     except S.StructuralHostMissingError:
-        pytest.skip(f"{slug}: missing Open Questions section — out of AC-3 scope")
+        pytest.skip(f"{slug}: missing Open Questions section — out of round-trip scope")
 
     a.write(slug, first)
     second = a.read(slug)

@@ -1,4 +1,4 @@
-"""AC-8 (a) — close on a clean epic exercises adapter read+write through CLI."""
+"""Close on a clean epic exercises adapter read+write through CLI."""
 import json
 import os
 import subprocess

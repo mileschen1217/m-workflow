@@ -1,4 +1,4 @@
-"""AC-5 — epic_storage selector resolution with default + AdapterNotFoundError."""
+"""epic_storage selector resolution with default + AdapterNotFoundError."""
 from pathlib import Path
 
 import pytest

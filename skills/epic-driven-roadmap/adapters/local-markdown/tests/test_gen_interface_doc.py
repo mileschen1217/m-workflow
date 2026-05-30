@@ -1,4 +1,4 @@
-"""AC-2c — interface.md consumer table is auto-generated; drift fails loud."""
+"""interface.md consumer table is auto-generated; drift fails loud."""
 import subprocess
 import sys
 from pathlib import Path
@@ -27,7 +27,7 @@ def test_generated_table_matches_committed_doc():
 
 
 def test_generated_table_lists_every_canonical_field():
-    """AC-2b — every consumer-tagged field appears in the table."""
+    """Every consumer-tagged field appears in the table."""
     from skills.epic_driven_roadmap.adapters.local_markdown import schema as S
     import dataclasses
 
@@ -43,7 +43,7 @@ def test_generated_table_lists_every_canonical_field():
 
 
 def test_sidecar_passthrough_lists_every_sidecar_field():
-    """AC-2b — every sidecar field appears in passthrough list."""
+    """Every sidecar field appears in passthrough list."""
     from skills.epic_driven_roadmap.adapters.local_markdown import schema as S
     import dataclasses
 

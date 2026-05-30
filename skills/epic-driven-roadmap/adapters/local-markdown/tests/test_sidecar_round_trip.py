@@ -1,4 +1,4 @@
-"""AC-6 — sidecar key set + value strings preserved on read→write→read."""
+"""Sidecar key set + value strings preserved on read→write→read."""
 import json
 import re
 import shutil
@@ -56,7 +56,7 @@ def test_sidecar_round_trip_preserves_keys_and_value_strings(tmp_path, case: str
 
 
 def test_phase_sidecar_list_value_raises_sidecar_unstorable(tmp_path):
-    """AC-6 — Phases-table cell host cannot express list[str]; write must throw
+    """Phases-table cell host cannot express list[str]; write must throw
     `SidecarUnstorableError` rather than silently coerce to a `"['a', 'b']"`
     literal cell. On-disk file must be unchanged (atomic-or-throw)."""
     import hashlib
@@ -91,7 +91,7 @@ def test_phase_sidecar_list_value_raises_sidecar_unstorable(tmp_path):
 
 
 def test_phase_sidecar_dict_value_raises_sidecar_unstorable(tmp_path):
-    """AC-6 — same rule for dict[str, str]: Phases-table cell host cannot carry it."""
+    """Same rule for dict[str, str]: Phases-table cell host cannot carry it."""
     import hashlib
     root = tmp_path / "epics"
     (root / "fixture").mkdir(parents=True)
@@ -116,7 +116,7 @@ def test_phase_sidecar_dict_value_raises_sidecar_unstorable(tmp_path):
 
 
 def test_phase_sidecar_str_with_pipe_raises_sidecar_unstorable(tmp_path):
-    """AC-6 — phase-sidecar str values containing `|` would split the row on
+    """Phase-sidecar str values containing `|` would split the row on
     re-read, breaking tag-preserving round-trip. Write must throw, not silently
     escape or coerce."""
     import hashlib

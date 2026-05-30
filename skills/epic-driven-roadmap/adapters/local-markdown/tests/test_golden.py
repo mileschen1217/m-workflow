@@ -1,4 +1,4 @@
-"""AC-3b — golden fixtures parse to expected canonical + sidecar superset."""
+"""Golden fixtures parse to expected canonical + sidecar superset."""
 import dataclasses
 import json
 from pathlib import Path

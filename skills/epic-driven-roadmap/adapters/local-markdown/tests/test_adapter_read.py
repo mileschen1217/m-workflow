@@ -1,4 +1,4 @@
-"""AC-3 happy path — adapter.read() parses an all-populated epic to EpicData."""
+"""Happy path — adapter.read() parses an all-populated epic to EpicData."""
 import textwrap
 from pathlib import Path
 
@@ -110,7 +110,7 @@ def test_read_structural_host_missing_raises(tmp_path: Path):
 
 
 def test_read_invalid_phase_status_raises_schema_validation(tmp_path: Path):
-    """M1 — phase status outside STATUS_VALUES → SchemaValidationError."""
+    """Phase status outside STATUS_VALUES → SchemaValidationError."""
     root = _seed(tmp_path, "bad", "invalid_phase_status.md")
     a = A.LocalMarkdownAdapter(root=root)
     with pytest.raises(S.SchemaValidationError) as exc:

@@ -1,4 +1,4 @@
-"""AC-8 (c) — Foundation reuse check reads aim/intention/out_of_scope via the CLI."""
+"""Foundation reuse check reads aim/intention/out_of_scope via the CLI."""
 import json
 import os
 import subprocess
